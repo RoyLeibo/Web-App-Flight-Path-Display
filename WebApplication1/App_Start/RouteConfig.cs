@@ -18,6 +18,30 @@ namespace WebApplication1
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+
+            routes.MapRoute(
+                name: "displayLocation",
+                url: "display/{ip}/{port}",
+                defaults: new { controller = "MainController", action = "displayLocation" }
+                );
+
+            routes.MapRoute(
+                name: "displayAnimation",
+                url: "display/{ip}/{port}/{freq}",
+                defaults: new { controller = "MainController", action = "displayAnimation" }
+                );
+
+            routes.MapRoute(
+                name: "save",
+                url: "display/{ip}/{port}/{freq}/{sec}/{fileName}",
+                defaults: new { controller = "MainController", action = "save" }
+                );
+
+            routes.MapRoute(
+                name: "displayPath",
+                url: "display/{fileName}/{freq}",
+                defaults: new { controller = "MainController", action = "displayPath" }
+                );
         }
     }
 }
