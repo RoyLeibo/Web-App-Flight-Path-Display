@@ -20,6 +20,8 @@ namespace WebApplication1.Controllers
             set
             {
                 this.lonAndLat = value;
+                ViewBag.lon = this.lonAndLat.getX();
+                ViewBag.lat = this.lonAndLat.getY();
             }
         }
 
