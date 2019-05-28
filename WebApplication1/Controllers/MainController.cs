@@ -28,6 +28,7 @@ namespace WebApplication1.Controllers
         public MainController()
         {
             this.myModel = new MyModel();
+            this.myModel.ioFromSimulator.IoEvent += getLonAndLat;
         }
 
         public ActionResult Index()
@@ -35,26 +36,28 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-        public ActionResult displayLocation(String ip, int port)
+        public ActionResult DisplayLocation(String ip, int port)
         {
-            this.myModel.connectionRequest(ip, port);
-            this.myModel.ioFromSimulator.IoEvent += getLonAndLat;
+            //this.myModel.connectionRequest(ip, port);
+            this.myModel.ioFromSimulator.getPoint(this.myModel.ioFromSimulator.server);
             return View();
         }
 
         public ActionResult displayAnimation(String ip, int port, int freq)
         {
-
+            this.myModel.connectionRequest(ip, port);
+            this.myModel.ioFromSimulator.ReadDataFromSimulator(this.myModel.ioFromSimulator.server);
+            return View();
         }
 
         public ActionResult save(String ip, int port, int freq, int sec, String fileName)
         {
-
+            return View();
         }
 
         public ActionResult displayPath(String fileName, int freq)
         {
-
+            return View();
         }
 
         public void getLonAndLat()

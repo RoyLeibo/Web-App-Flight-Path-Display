@@ -50,8 +50,18 @@ namespace WebApplication1.Models
             this.server = new TcpListener(IPAddress.Parse(this.ip), this.port);
             this.server.Start();
             this.socket = this.server.AcceptSocket();
-            this.ReadDataFromSimulator(this.server);
             this.ConnectionThread.Abort();
+        }
+
+        public void getPoint(TcpListener client)
+        {
+            //byte[] Buffer = new byte[1024];
+            //// reads data from simulator into buffer in bytes
+            //int recv = this.socket.Receive(Buffer);
+            //// convert bytes recieved into a string
+            //String StringData = Encoding.ASCII.GetString(Buffer, 0, recv);
+            //this.ParseAndUpdate(StringData);
+            this.LonAndLat = new Point(500, 0);
         }
 
         /*
