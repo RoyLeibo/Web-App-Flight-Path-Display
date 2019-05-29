@@ -2,9 +2,11 @@
 @{
     ViewBag.Title = "displayLocation";
 }
+<canvas id="myCanvas" width="200" height="200"></canvas>
 
-    <div>
-        <style>
+
+    <div >
+        <style id="map1">
 
             html, body {
                 margin: 0;
@@ -31,11 +33,24 @@
             }
         </style>
 
-        <img src="~/Content/export-map-share.png" alt="0" id="map">
+        
 
     </div>
 
+    <img src="~/Content/export-map-share.png" alt="0" id="map" >
+
 <script>
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+
+    ctx.beginPath();
+    ctx.arc(0, 0, 40, 0, 2 * Math.PI);
+    ctx.fill();
+       // $("div").append(ctx);
+</script>
+
+
+@*<script>
     var redPointAdded = document.createElement('figure');
                 redPointAdded.id = id;
                 redPointAdded.style.position = 'absolute';
@@ -47,19 +62,36 @@
                 redPointAdded.style.borderRadius = "50%";
 
     $("div").append(redPointAdded);
-    </script>
+    </script>*@
+
+
+@*<script>
+        window.onload = function () {
+            var c = document.getElementById("myCanvas");
+            var ctx = c.getContext("2d");
+            //ctx.innerWidth = window.innerWidth;
+            //ctx.innerHeight = window.innerHeight;
+            var img1 = new Image();
+            img1.src = '/Content/export-map-share.png';
+            ctx.drawImage(img1);
+
+    </script>*@
+@*<img src="~/Content/export-map-share.png" alt="0" id="map">*@
+
+
+
 @*<canvas id="myCanvas" width="50" height="50"></canvas>
-<script>
-    function draw() {
-        var myCanvas = document.getElementById("myCanvas");
-        //myCanvas.canvas.width = window.innerWidth;
-        //myCanvas.canvas.height = window.innerHeight;
-        var con = myCanvas.getContext("2d");
-        con.
-        var map = document.getElementById("map");
-        con.drawImage(map, 0, 0, 50, 50);
-    }
-</script>*@
+    <script>
+        function draw() {
+            var myCanvas = document.getElementById("myCanvas");
+            //myCanvas.canvas.width = window.innerWidth;
+            //myCanvas.canvas.height = window.innerHeight;
+            var con = myCanvas.getContext("2d");
+            con.
+            var map = document.getElementById("map");
+            con.drawImage(map, 0, 0, 50, 50);
+        }
+    </script>*@
 
 @*<meta name="viewport" content="width=device-width, initial-scale=1">
             <style>
