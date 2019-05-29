@@ -18,6 +18,7 @@ namespace WebApplication1.Models
         public Thread ConnectionThread { get; set; }
         public TcpListener server { get; set; }
         public Socket socket { get; set; }
+        public bool isWriteToFile { get; set; }
         private Point lonAndLat;
         public Point LonAndLat
         {
@@ -32,6 +33,30 @@ namespace WebApplication1.Models
                 IoEvent?.Invoke();
             }
         }
+        private double throttle;
+        public double Throttle
+        {
+            get
+            {
+                return this.throttle;
+            }
+            set
+            {
+                this.throttle = value;
+            }
+        }
+        private double rudder;
+        public double Rudder
+        {
+            get
+            {
+                return this.rudder;
+            }
+            set
+            {
+                this.rudder= value;
+            }
+        }
 
         /*
          * This function is called when the "Connect" button is clicked.
@@ -43,6 +68,7 @@ namespace WebApplication1.Models
         {
             this.ConnectionThread = new Thread(new ThreadStart(ConnectInOtherThread));
             this.ConnectionThread.Start();
+            this.isWriteToFile = false;
         }
 
         public void ConnectInOtherThread()
@@ -50,7 +76,6 @@ namespace WebApplication1.Models
             this.server = new TcpListener(IPAddress.Parse(this.ip), this.port);
             this.server.Start();
             this.socket = this.server.AcceptSocket();
-            this.ConnectionThread.Abort();
         }
 
         public void getPoint(TcpListener client)
@@ -133,13 +158,22 @@ namespace WebApplication1.Models
             // ',' to it after the Lon.
             double Lat = Double.Parse(StringData.Substring(StartOfLat, EndOfLat - StartOfLat));
             this.LonAndLat = new Point(Lat, Lon);
+            if (this.isWriteToFile)
+            {
+                int StartOfThrottle = EndOfLat + 1;
+                int EndOfThrottle = StringData.IndexOf(',', StartOfThrottle);
+                this.Throttle = Double.Parse(StringData.Substring(StartOfThrottle, EndOfThrottle - StartOfThrottle));
+                int StartOfRudder = EndOfThrottle + 1;
+                int EndOfRudder = StringData.IndexOf(',', StartOfRudder);
+                this.Rudder = Double.Parse(StringData.Substring(StartOfRudder, EndOfRudder - StartOfRudder));
+                
+            }
         }
 
         public void setIpAndPort(String ip, int port)
         {
             this.ip = ip;
             this.port = port;
-            this.Connect();
         }
     }
 }

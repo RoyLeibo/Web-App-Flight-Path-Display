@@ -45,13 +45,14 @@ namespace WebApplication1.Controllers
 
         public ActionResult displayAnimation(String ip, int port, int freq)
         {
-            this.myModel.connectionRequest(ip, port);
+            this.myModel.connectionWithoutSave(ip, port);
             this.myModel.ioFromSimulator.ReadDataFromSimulator(this.myModel.ioFromSimulator.server);
             return View();
         }
 
         public ActionResult save(String ip, int port, int freq, int sec, String fileName)
         {
+            this.myModel.ioFromSimulator.isWriteToFile = true;
             return View();
         }
 

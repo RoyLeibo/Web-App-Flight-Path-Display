@@ -18,9 +18,10 @@ namespace WebApplication1.Models
             this.ioFromSimulator = new IOFromSimulator();
         }
 
-        public void connectionRequest(String ip, int port)
+        public void connectionWithoutSave(String ip, int port)
         {
             this.ioFromSimulator.setIpAndPort(ip, port);
+            this.ioFromSimulator.Connect();
         }
     }
 }
