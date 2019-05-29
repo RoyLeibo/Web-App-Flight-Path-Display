@@ -9,40 +9,79 @@ namespace WebApplication1.Models
 {
     public class IOFromFile
     {
-        private String DataToSave;
-        public void saveData(String fileName, String data)
+        public event handler IoEvent;
+        private Point lonAndLat;
+        public Point LonAndLat
         {
-            StreamWriter SW = new StreamWriter(fileName);
-            SW.WriteLine(data);
+            get
+            {
+                return this.lonAndLat;
+            }
+            set
+            {
+                this.lonAndLat = value;
+                IoEvent?.Invoke();
+            }
+        }
+        private String DataToSave;
+        public void saveData(String FileName, double[] dataToSave)
+        {
+            StreamWriter SW = new StreamWriter(FileName);
+            SW.WriteLine(this.createDataString(dataToSave));
         }
 
-        public String loadData(String fileName, String data)
+        public void loadData(String fileName)
         {
+            List<String> fileData = new List<String>();
             try
             {
-                StreamReader SR = new StreamReader(fileName)
+                StreamReader SR = new StreamReader(fileName);
+                String line = "";
+                do
+                {
+                    line = SR.ReadLine();
+                    fileData.Add(line);
+                } while (line != null);
             }
-            catch (ArgumentNullException e)
+            catch (Exception e)
             {
 
             }
-
-            FileStream F = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-            List<int> list = new List<int>();
-            int tempRead;
-            do
-            {
-                tempRead = F.ReadByte();
-                list.Add(tempRead);
-            } while (tempRead != -1);
-            int[] intArray = list.ToArray();
-            byte[] byteArray = intArray.SelectMany(BitConverter.GetBytes).ToArray();
-            return Encoding.ASCII.GetString(byteArray);
+            this.parseFileData(fileData);
         }
 
-        public void createDataString(Point LonAndLat, double Throttle, double Rudder)
+        public String createDataString(double[] dataToSave)
         {
+            String data = "";
+            for (int i = 0; i < dataToSave.Length; i++)
+            {
+                data += dataToSave[i].ToString() + "$";
+            }
+            return data;
+        }
 
+        public void parseFileData(List<String> fileData)
+        {
+            foreach (String line in fileData)
+            {
+                int StartOfLon = 0;
+                int EndOfLon = line.IndexOf('$', StartOfLon);
+                // Extract the Lon property from the data string by finding the closest
+                // ',' to it from start.
+                double Lon = Double.Parse(line.Substring(StartOfLon, EndOfLon - StartOfLon));
+                int StartOfLat = EndOfLon + 1;
+                int EndOfLat = line.IndexOf('$', StartOfLat);
+                // Extract the Lat property from the data string by finding the closest
+                // ',' to it after the Lon.
+                double Lat = Double.Parse(line.Substring(StartOfLat, EndOfLat - StartOfLat));
+                this.LonAndLat = new Point(Lat, Lon);
+                //int StartOfThrottle = EndOfLat + 1;
+                //int EndOfThrottle = line.IndexOf('$', StartOfThrottle);
+                //this.Throttle = Double.Parse(line.Substring(StartOfThrottle, EndOfThrottle - StartOfThrottle));
+                //int StartOfRudder = EndOfThrottle + 1;
+                //int EndOfRudder = line.IndexOf(',', StartOfRudder);
+                //this.Rudder = Double.Parse(line.Substring(StartOfRudder, EndOfRudder - StartOfRudder));
+            }
         }
     }
 }

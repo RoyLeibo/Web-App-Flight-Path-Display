@@ -29,6 +29,7 @@ namespace WebApplication1.Controllers
         {
             this.myModel = new MyModel();
             this.myModel.ioFromSimulator.IoEvent += getLonAndLat;
+            this.myModel.ioFromFile.IoEvent += getLonAndLat;
         }
 
         public ActionResult Index()
@@ -58,6 +59,7 @@ namespace WebApplication1.Controllers
 
         public ActionResult displayPath(String fileName, int freq)
         {
+            this.myModel.ioFromFile.loadData(fileName);
             return View();
         }
 

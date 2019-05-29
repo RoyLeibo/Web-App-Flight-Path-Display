@@ -166,7 +166,8 @@ namespace WebApplication1.Models
                 int StartOfRudder = EndOfThrottle + 1;
                 int EndOfRudder = StringData.IndexOf(',', StartOfRudder);
                 this.Rudder = Double.Parse(StringData.Substring(StartOfRudder, EndOfRudder - StartOfRudder));
-                
+                double[] dataArray = { this.LonAndLat.getX(), this.LonAndLat.getY(), this.Throttle, this.Rudder };
+                new IOFromFile().saveData("Flight1.txt", dataArray);
             }
         }
 
