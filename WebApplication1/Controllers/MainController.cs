@@ -40,6 +40,7 @@ namespace WebApplication1.Controllers
         public ActionResult DisplayLocation(String ip, int port)
         {
             //this.myModel.connectionRequest(ip, port);
+            this.myModel.connectionWithoutSave(ip, port);
             this.myModel.ioFromSimulator.getPoint(this.myModel.ioFromSimulator.server);
             return View();
         }
