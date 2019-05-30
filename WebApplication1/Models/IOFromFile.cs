@@ -23,16 +23,19 @@ namespace WebApplication1.Models
                 IoEvent?.Invoke();
             }
         }
-        private String DataToSave;
         public void saveData(String FileName, double[] dataToSave)
         {
-            String FilePath = @"C:\Desktop\" + FileName;
-            if (!File.Exists(FileName))
+            String FilePath = @"C:\temp\" + FileName;
+            if (File.Exists(FilePath))
             {
-                File.Create(FileName);
+                File.Delete(FilePath);
             }
-            StreamWriter SW = new StreamWriter(FileName);
-            SW.WriteLine(this.createDataString(dataToSave));
+            StreamWriter SW = new StreamWriter(FilePath);
+            String data = this.createDataString(dataToSave);
+            SW.WriteLine(data);
+            SW.Flush();
+            SW.WriteLine(data);
+            SW.Flush();
         }
 
         public void loadData(String fileName)
@@ -40,13 +43,17 @@ namespace WebApplication1.Models
             List<String> fileData = new List<String>();
             try
             {
-                StreamReader SR = new StreamReader(fileName);
-                String line = "";
-                do
+                String FilePath = @"C:\temp\" + fileName;
+                if (File.Exists(FilePath))
                 {
-                    line = SR.ReadLine();
-                    fileData.Add(line);
-                } while (line != null);
+                    StreamReader SR = new StreamReader(FilePath);
+                    String line = "";
+                    do
+                    {
+                        line = SR.ReadLine();
+                        fileData.Add(line);
+                    } while (line != null);
+                }
             }
             catch (Exception e)
             {
@@ -69,6 +76,10 @@ namespace WebApplication1.Models
         {
             foreach (String line in fileData)
             {
+                if(line == null)
+                {
+                    break;
+                }
                 int StartOfLon = 0;
                 int EndOfLon = line.IndexOf('$', StartOfLon);
                 // Extract the Lon property from the data string by finding the closest
@@ -79,7 +90,7 @@ namespace WebApplication1.Models
                 // Extract the Lat property from the data string by finding the closest
                 // ',' to it after the Lon.
                 double Lat = Double.Parse(line.Substring(StartOfLat, EndOfLat - StartOfLat));
-                this.LonAndLat = new Point(Lat, Lon);
+                this.LonAndLat = new Point(Lot, Lat);
                 //int StartOfThrottle = EndOfLat + 1;
                 //int EndOfThrottle = line.IndexOf('$', StartOfThrottle);
                 //this.Throttle = Double.Parse(line.Substring(StartOfThrottle, EndOfThrottle - StartOfThrottle));
