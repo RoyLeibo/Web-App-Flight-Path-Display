@@ -40,9 +40,7 @@ namespace WebApplication1.Controllers
         public ActionResult DisplayLocation(String ip, int port)
         {
             //this.myModel.connectionRequest(ip, port);
-            double[] temp = { 2.0, 3.0 };
-            this.myModel.ioFromFile.saveData("CheckFile.txt", temp);
-            this.myModel.ioFromFile.loadData("CheckFile.txt");
+            this.myModel.connectionWithoutSave(ip, port);
             this.myModel.ioFromSimulator.getPoint(this.myModel.ioFromSimulator.server);
             return View();
         }

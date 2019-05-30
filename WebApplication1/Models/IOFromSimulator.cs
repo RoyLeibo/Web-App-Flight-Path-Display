@@ -80,13 +80,13 @@ namespace WebApplication1.Models
 
         public void getPoint(TcpListener client)
         {
-            //byte[] Buffer = new byte[1024];
-            //// reads data from simulator into buffer in bytes
-            //int recv = this.socket.Receive(Buffer);
-            //// convert bytes recieved into a string
-            //String StringData = Encoding.ASCII.GetString(Buffer, 0, recv);
-            //this.ParseAndUpdate(StringData);
-            this.LonAndLat = new Point(500, 0);
+            byte[] Buffer = new byte[1024];
+            // reads data from simulator into buffer in bytes
+            int recv = this.socket.Receive(Buffer);
+            // convert bytes recieved into a string
+            String StringData = Encoding.ASCII.GetString(Buffer, 0, recv);
+            this.ParseAndUpdate(StringData);
+            //this.LonAndLat = new Point(500, 0);
         }
 
         /*
