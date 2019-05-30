@@ -2,136 +2,54 @@
 @{
     ViewBag.Title = "displayLocation";
 }
-<canvas id="myCanvas" width="200" height="200"></canvas>
 
+<div>
+    <style id="map1">
 
-    <div >
-        <style id="map1">
+        html, body {
+            margin: 0;
+            height: 100%;
+            background-image: url(../../../Content/export-map-share.png); 
+            background-position:center;
+            background-repeat:no-repeat;
+            background-size:cover;
+        }
 
-            html, body {
-                margin: 0;
-                height: 100%;
-            }
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-            img {
-                display: block;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
+        div {
+            position: relative;
+        }
 
-            div {
-                position: relative;
-            }
+        .bluePoint {
+            position: static;
+            background: Blue;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+        }
+    </style>
+    
 
-            .bluePoint {
-                position: static;
-                background: Blue;
-                height: 16px;
-                width: 16px;
-                border-radius: 50%;
-            }
-        </style>
+</div>
 
-        
-
-    </div>
-
-    <img src="~/Content/export-map-share.png" alt="0" id="map" >
+<canvas id="myCanvas"></canvas>
 
 <script>
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
+    var lon = (@ViewBag.lon + 180) * c.clientWidth / 360;
+    var lat = (@ViewBag.lat + 90) * c.clientHeight / 90;
 
     ctx.beginPath();
-    ctx.arc(0, 0, 40, 0, 2 * Math.PI);
+    ctx.arc(lon, lat, 5, 0, 2 * Math.PI);
     ctx.fill();
        // $("div").append(ctx);
 </script>
 
 
-@*<script>
-    var redPointAdded = document.createElement('figure');
-                redPointAdded.id = id;
-                redPointAdded.style.position = 'absolute';
-                redPointAdded.style.left = "20" + '%';
-                redPointAdded.style.top = "20" + '%';
-                redPointAdded.style.height = "1%";
-                redPointAdded.style.width = "0.5%";
-                redPointAdded.style.background = 'Red';
-                redPointAdded.style.borderRadius = "50%";
-
-    $("div").append(redPointAdded);
-    </script>*@
-
-
-@*<script>
-        window.onload = function () {
-            var c = document.getElementById("myCanvas");
-            var ctx = c.getContext("2d");
-            //ctx.innerWidth = window.innerWidth;
-            //ctx.innerHeight = window.innerHeight;
-            var img1 = new Image();
-            img1.src = '/Content/export-map-share.png';
-            ctx.drawImage(img1);
-
-    </script>*@
-@*<img src="~/Content/export-map-share.png" alt="0" id="map">*@
-
-
-
-@*<canvas id="myCanvas" width="50" height="50"></canvas>
-    <script>
-        function draw() {
-            var myCanvas = document.getElementById("myCanvas");
-            //myCanvas.canvas.width = window.innerWidth;
-            //myCanvas.canvas.height = window.innerHeight;
-            var con = myCanvas.getContext("2d");
-            con.
-            var map = document.getElementById("map");
-            con.drawImage(map, 0, 0, 50, 50);
-        }
-    </script>*@
-
-@*<meta name="viewport" content="width=device-width, initial-scale=1">
-            <style>
-                body, html {
-                    height: 100%;
-                    margin: 0;
-                }
-
-                .bg {
-                    /* The image used */
-                    background-image: url("~/Content/export-map-share.png");
-    /* Full height */
-                    height: 100%;
-                    /* Center and scale the image nicely */
-                    background-position: center;
-                    background-repeat: no-repeat;
-                    background-size: cover;
-                }
-            </style>*@
-
-@*<h2>@ViewBag.lon , @ViewBag.lat</h2>*@
-
-@**<img id="map" src="/Content/export-map-share.png" />
-    <canvas id="myCanvas" width="50" height="50"></canvas>
-    <script>
-        function draw() {
-            var myCanvas = document.getElementById("myCanvas");
-            //myCanvas.canvas.width = window.innerWidth;
-            //myCanvas.canvas.height = window.innerHeight;
-            var con = myCanvas.getContext("2d");
-            var map = document.getElementById("map");
-            con.drawImage(map, 0, 0, 50, 50);
-        }
-    </script>*@
-
-@*<canvas id="myCanvas" width="2000" height="1000"></canvas>
-
-    <script>
-        var canvas = document.getElementById("myCanvas");
-        var ctx = canvas.getContext("2d");
-        ctx.strokeStyle = "red";
-        ctx.strokeRect(@ViewBag.lon, @ViewBag.lat, 50, 50);
-    </script>*@
