@@ -26,6 +26,11 @@ namespace WebApplication1.Models
         private String DataToSave;
         public void saveData(String FileName, double[] dataToSave)
         {
+            String FilePath = @"C:\Desktop\" + FileName;
+            if (!File.Exists(FileName))
+            {
+                File.Create(FileName);
+            }
             StreamWriter SW = new StreamWriter(FileName);
             SW.WriteLine(this.createDataString(dataToSave));
         }
