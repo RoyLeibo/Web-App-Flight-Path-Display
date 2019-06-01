@@ -17,11 +17,5 @@ namespace WebApplication1.Models
             this.ioFromFile = new IOFromFile();
             this.ioFromSimulator = new IOFromSimulator();
         }
-
-        public void connectionWithoutSave(String ip, int port)
-        {
-            this.ioFromSimulator.setIpAndPort(ip, port);
-            this.ioFromSimulator.Connect();
-        }
     }
 }

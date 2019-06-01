@@ -17,8 +17,24 @@ namespace WebApplication1.Models
         private int port { get; set; }
         public Thread ConnectionThread { get; set; }
         public TcpListener server { get; set; }
-        public Socket socket { get; set; }
+        public TcpClient client { get; set; }
+        public NetworkStream stream { get; set; }
         public bool isWriteToFile { get; set; }
+        public bool isRunOnce { get; set; }
+        public double Lon { get; set; }
+        public double lat;
+        public double Lat
+        {
+            get
+            {
+                return this.lat;
+            }
+            set
+            {
+                this.lat = value;
+                this.LonAndLat = new Point(value, this.Lon);
+            }
+        }
         private Point lonAndLat;
         public Point LonAndLat
         {
@@ -30,7 +46,8 @@ namespace WebApplication1.Models
             {
                 this.lonAndLat = value;
                 // notify the view model that this property is changed
-                IoEvent?.Invoke();
+                //IoEvent?.Invoke();
+                System.Diagnostics.Debug.WriteLine("({0}, {1})", this.lonAndLat.getX(), this.lonAndLat.getY());
             }
         }
         private double throttle;
@@ -42,6 +59,7 @@ namespace WebApplication1.Models
             }
             set
             {
+                System.Diagnostics.Debug.WriteLine("Throttle: {0}", this.rudder);
                 this.throttle = value;
             }
         }
@@ -54,7 +72,8 @@ namespace WebApplication1.Models
             }
             set
             {
-                this.rudder= value;
+                this.rudder = value;
+                System.Diagnostics.Debug.WriteLine("Rudder: {0}", this.rudder);
             }
         }
 
@@ -66,27 +85,23 @@ namespace WebApplication1.Models
          */
         public void Connect()
         {
-            this.ConnectionThread = new Thread(new ThreadStart(ConnectInOtherThread));
-            this.ConnectionThread.Start();
-            this.isWriteToFile = false;
+            //    this.ConnectionThread = new Thread(new ThreadStart(ConnectInOtherThread(String ip, int port));
+            //    this.ConnectionThread.Start();
+            //    this.isWriteToFile = false;
         }
 
-        public void ConnectInOtherThread()
+        public void ConnectInOtherThread(String ip, int port)
         {
-            this.server = new TcpListener(IPAddress.Parse(this.ip), this.port);
-            this.server.Start();
-            this.socket = this.server.AcceptSocket();
+            this.isRunOnce = false;
+            this.client = new TcpClient(ip, port);
+            this.stream = this.client.GetStream();
+            System.Diagnostics.Debug.WriteLine("Simulator Just Accepted Me");
         }
 
-        public void getPoint(TcpListener client)
+        public void getPoint()
         {
-            byte[] Buffer = new byte[1024];
-            // reads data from simulator into buffer in bytes
-            int recv = this.socket.Receive(Buffer);
-            // convert bytes recieved into a string
-            String StringData = Encoding.ASCII.GetString(Buffer, 0, recv);
-            this.ParseAndUpdate(StringData);
-            //this.LonAndLat = new Point(500, 0);
+            this.isRunOnce = true;
+            this.ReadDataFromSimulator();
         }
 
         /*
@@ -96,78 +111,53 @@ namespace WebApplication1.Models
          * the Generic Small file and, call to another function to parse the data
          * and in the end create a point from the Lon and Lat data.
          */
-        public void ReadDataFromSimulator(TcpListener client)
+        public void ReadDataFromSimulator()
         {
+            System.Diagnostics.Debug.WriteLine("Inside ReadData...");
             byte[] Buffer = new byte[1024];
-            bool isEndOfLine;
-            int recv = 0;
-            int EndOfLine = 0;
-            String StringData = "";
-            String Result = "";
-            String Remainder = "";
-            while (true)
-            {
-                StringData = "";
-                Array.Clear(Buffer, 0, Buffer.Length);
-                // reads data from simulator into buffer in bytes
-                recv = this.socket.Receive(Buffer);
-                // convert bytes recieved into a string
-                StringData = Encoding.ASCII.GetString(Buffer, 0, recv);
-                Result = Remainder;
-                isEndOfLine = true;
-                // finding the closest end of line
-                while (isEndOfLine)
-                {
-                    EndOfLine = StringData.IndexOf('\n');
-                    if (EndOfLine != -1)
-                    {
-                        // An end of line is found, the function adds the remaining
-                        // data into the Result string and take it of from StringData.
-                        Result += StringData.Substring(0, EndOfLine);
-                        StringData = StringData.Substring(EndOfLine + 1);
-                        ParseAndUpdate(Result);
-                        // clear Result and Buffer
-                        Result = "";
-                        Remainder = "";
-                    }
-                    else
-                    {
-                        // An end of line is not found, move the data to the remainder
-                        // and start loop again
-                        Remainder += StringData;
-                        isEndOfLine = false;
-                    }
-                }
-            }
-        }
-
-        /*
-         * This function receives a string which contains all data recieved from
-         * simulator in a single time and extracting the Lon and Lat properties. 
-         */
-        public void ParseAndUpdate(String StringData)
-        {
-            int StartOfLon = 0;
-            int EndOfLon = StringData.IndexOf(',', StartOfLon);
-            // Extract the Lon property from the data string by finding the closest
-            // ',' to it from start.
-            double Lon = Double.Parse(StringData.Substring(StartOfLon, EndOfLon - StartOfLon));
-            int StartOfLat = EndOfLon + 1;
-            int EndOfLat = StringData.IndexOf(',', StartOfLat);
-            // Extract the Lat property from the data string by finding the closest
-            // ',' to it after the Lon.
-            double Lat = Double.Parse(StringData.Substring(StartOfLat, EndOfLat - StartOfLat));
-            this.LonAndLat = new Point(Lat, Lon);
+            int recv;
+            double value;
+            List<String> RequestsStringsList = new List<String>();
+            RequestsStringsList.Add("get /position/longitude-deg");
+            RequestsStringsList.Add("get /position/latiude-deg");
             if (this.isWriteToFile)
             {
-                int StartOfThrottle = EndOfLat + 1;
-                int EndOfThrottle = StringData.IndexOf(',', StartOfThrottle);
-                this.Throttle = Double.Parse(StringData.Substring(StartOfThrottle, EndOfThrottle - StartOfThrottle));
-                int StartOfRudder = EndOfThrottle + 1;
-                int EndOfRudder = StringData.IndexOf(',', StartOfRudder);
-                this.Rudder = Double.Parse(StringData.Substring(StartOfRudder, EndOfRudder - StartOfRudder));
-                double[] dataArray = { this.LonAndLat.getX(), this.LonAndLat.getY(), this.Throttle, this.Rudder };
-                new IOFromFile().saveData("Flight1.txt", dataArray);
+                RequestsStringsList.Add("get /controls/flight/rudder");
+                RequestsStringsList.Add("get /controls/engines/engine/throttle");
+            }
+            while (true)
+            {
+                for (int i = 0; i < RequestsStringsList.Count; i++)
+                {
+                    System.Diagnostics.Debug.WriteLine("Sent: " + RequestsStringsList[i]);
+                    Buffer = Encoding.ASCII.GetBytes(RequestsStringsList[i]);
+                    this.stream.Write(Buffer, 0, Buffer.Length);
+                    Buffer = new byte[1024];
+                    recv = this.stream.Read(Buffer, 0, Buffer.Length);
+                    value = Convert.ToDouble(Encoding.ASCII.GetString(Buffer));
+                    System.Diagnostics.Debug.WriteLine("Recieved: " + value);
+                    switch (i)
+                    {
+                        case 0:
+                            this.Lon = value;
+                            break;
+                        case 1:
+                            this.Lat = value;
+                            break;
+                        case 2:
+                            this.Rudder = value;
+                            break;
+                        case 3:
+                            this.Throttle = value;
+                            break;
+                    }
+                }
+                if (this.isWriteToFile)
+                {
+                    double[] dataArray = { this.Lon, this.Lat, this.Throttle, this.Rudder };
+                    new IOFromFile().saveData("Flight1.txt", dataArray);
+                }
+                if (isRunOnce) { break; }
             }
         }
 

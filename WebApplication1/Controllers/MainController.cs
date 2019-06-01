@@ -39,25 +39,24 @@ namespace WebApplication1.Controllers
 
         public ActionResult DisplayLocation(String ip, int port)
         {
-            //this.myModel.connectionRequest(ip, port);
-            //this.myModel.connectionWithoutSave(ip, port);
-            double[] temp = { 2, 0, 3.0 };
-            //this.myModel.ioFromFile.saveData("Test.txt", temp);
-            this.myModel.ioFromFile.loadData("Test.txt");
-            //this.myModel.ioFromSimulator.getPoint(this.myModel.ioFromSimulator.server);
+
+            this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
+            this.myModel.ioFromSimulator.getPoint();
             return View();
         }
 
         public ActionResult displayAnimation(String ip, int port, int freq)
         {
-            this.myModel.connectionWithoutSave(ip, port);
-            this.myModel.ioFromSimulator.ReadDataFromSimulator(this.myModel.ioFromSimulator.server);
+            this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
+            this.myModel.ioFromSimulator.ReadDataFromSimulator();
             return View();
         }
 
         public ActionResult save(String ip, int port, int freq, int sec, String fileName)
         {
             this.myModel.ioFromSimulator.isWriteToFile = true;
+            this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
+            this.myModel.ioFromSimulator.ReadDataFromSimulator();
             return View();
         }
 

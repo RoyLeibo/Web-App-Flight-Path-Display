@@ -90,7 +90,7 @@ namespace WebApplication1.Models
                 // Extract the Lat property from the data string by finding the closest
                 // ',' to it after the Lon.
                 double Lat = Double.Parse(line.Substring(StartOfLat, EndOfLat - StartOfLat));
-                this.LonAndLat = new Point(Lot, Lat);
+                this.LonAndLat = new Point(Lon, Lat);
                 //int StartOfThrottle = EndOfLat + 1;
                 //int EndOfThrottle = line.IndexOf('$', StartOfThrottle);
                 //this.Throttle = Double.Parse(line.Substring(StartOfThrottle, EndOfThrottle - StartOfThrottle));
