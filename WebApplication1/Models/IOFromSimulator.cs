@@ -20,7 +20,6 @@ namespace WebApplication1.Models
         public TcpClient client { get; set; }
         public NetworkStream stream { get; set; }
         public bool isWriteToFile { get; set; }
-        public bool isRunOnce { get; set; }
         public double Lon { get; set; }
         public double lat;
         public double Lat
@@ -93,8 +92,7 @@ namespace WebApplication1.Models
         }
 
         public void ConnectInOtherThread(String ip, int port)
-        {
-            this.isRunOnce = false;
+        {;
             this.client = new TcpClient(ip, port);
             this.stream = this.client.GetStream();
             System.Diagnostics.Debug.WriteLine("Simulator Just Accepted Me");
@@ -102,7 +100,6 @@ namespace WebApplication1.Models
 
         public void getPoint()
         {
-            this.isRunOnce = true;
             this.ReadDataFromSimulator();
         }
 
@@ -129,51 +126,47 @@ namespace WebApplication1.Models
                 RequestsStringsList.Add("get /controls/flight/rudder\r\n");
                 RequestsStringsList.Add("get /controls/engines/engine/throttle\r\n");
             }
-            while (true)
+            for (int i = 0; i < RequestsStringsList.Count; i++)
             {
-                for (int i = 0; i < RequestsStringsList.Count; i++)
+                num = "";
+                System.Diagnostics.Debug.WriteLine("Sent: " + RequestsStringsList[i]);
+                Buffer = Encoding.ASCII.GetBytes(RequestsStringsList[i]);
+                this.stream.Write(Buffer, 0, Buffer.Length);
+                Buffer = new byte[1024];
+                recv = this.stream.Read(Buffer, 0, Buffer.Length);
+                String c = Encoding.ASCII.GetString(Buffer, 0, recv);
+                int u = RequestsStringsList[i].Length - 2;
+
+                for (int j = u; j < c.Length; j++)
                 {
-                    num = "";
-                    System.Diagnostics.Debug.WriteLine("Sent: " + RequestsStringsList[i]);
-                    Buffer = Encoding.ASCII.GetBytes(RequestsStringsList[i]);
-                    this.stream.Write(Buffer, 0, Buffer.Length);
-                    Buffer = new byte[1024];
-                    recv = this.stream.Read(Buffer, 0, Buffer.Length);
-                    String c = Encoding.ASCII.GetString(Buffer, 0, recv);
-                    int u = RequestsStringsList[i].Length - 2;
-
-                    for (int j = u; j < c.Length; j++)
+                    if (Char.IsDigit(c[j]) || c[j] == '.' || c[j] == '-')
                     {
-                        if (Char.IsDigit(c[j]) || c[j] == '.' || c[j] == '-')
-                        {
-                            num += c[j];
-                        }
-                    }
-                    value = Convert.ToDouble(num);
-
-                    System.Diagnostics.Debug.WriteLine("Recieved: " + value);
-                    switch (i)
-                    {
-                        case 0:
-                            this.Lon = value;
-                            break;
-                        case 1:
-                            this.Lat = value;
-                            break;
-                        case 2:
-                            this.Rudder = value;
-                            break;
-                        case 3:
-                            this.Throttle = value;
-                            break;
+                        num += c[j];
                     }
                 }
-                if (this.isWriteToFile)
+                value = Convert.ToDouble(num);
+
+                System.Diagnostics.Debug.WriteLine("Recieved: " + value);
+                switch (i)
                 {
-                    double[] dataArray = { this.Lon, this.Lat, this.Throttle, this.Rudder };
-                    new IOFromFile().saveData("Flight1.txt", dataArray);
+                    case 0:
+                        this.Lon = value;
+                        break;
+                    case 1:
+                        this.Lat = value;
+                        break;
+                    case 2:
+                        this.Rudder = value;
+                        break;
+                    case 3:
+                        this.Throttle = value;
+                        break;
                 }
-                if (isRunOnce) { break; }
+            }
+            if (this.isWriteToFile)
+            {
+                double[] dataArray = { this.Lon, this.Lat, this.Throttle, this.Rudder };
+                new IOFromFile().saveData("Flight1.txt", dataArray);
             }
         }
 

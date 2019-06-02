@@ -10,6 +10,7 @@ namespace WebApplication1.Controllers
     public class MainController : Controller
     {
         private MyModel myModel;
+        private bool IsConnected { get; set; }
         private Point lonAndLat;
         public Point LonAndLat
         {
@@ -22,6 +23,7 @@ namespace WebApplication1.Controllers
                 this.lonAndLat = value;
                 ViewBag.lon = this.lonAndLat.getX();
                 ViewBag.lat = this.lonAndLat.getY();
+                ViewBag.LonAndLat = this.lonAndLat;
             }
         }
 
@@ -30,6 +32,7 @@ namespace WebApplication1.Controllers
             this.myModel = new MyModel();
             this.myModel.ioFromSimulator.IoEvent += getLonAndLat;
             this.myModel.ioFromFile.IoEvent += getLonAndLat;
+            this.IsConnected = false;
         }
 
         public ActionResult Index()
@@ -39,15 +42,20 @@ namespace WebApplication1.Controllers
 
         public ActionResult DisplayLocation(String ip, int port)
         {
-
             this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
             this.myModel.ioFromSimulator.getPoint();
             return View();
         }
 
-        public ActionResult displayAnimation(String ip, int port, int freq)
+        [HttpGet]
+        public ActionResult DisplayAnimation(String ip, int port, int freq)
         {
-            this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
+            Session["freq"] = freq;
+            if (!this.IsConnected)
+            {
+                this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
+                this.IsConnected = true;
+            }
             this.myModel.ioFromSimulator.ReadDataFromSimulator();
             return View();
         }
