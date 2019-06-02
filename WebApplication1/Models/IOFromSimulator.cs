@@ -102,9 +102,9 @@ namespace WebApplication1.Models
 
         public void getPoint()
         {
-            //this.isRunOnce = true;
-            //this.ReadDataFromSimulator();
-            this.LonAndLat = new Point(2, 2);
+            this.isRunOnce = true;
+            this.ReadDataFromSimulator();
+            //this.LonAndLat = new Point(2, 2);
         }
 
         /*
