@@ -9,10 +9,11 @@
         html, body {
             margin: 0;
             height: 100%;
-            background-image: url(../../../Content/export-map-share.png); 
-            background-position:center;
-            background-repeat:no-repeat;
-            background-size:cover;
+            background-image: url(../../../Content/export-map-share.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            
         }
 
         img {
@@ -34,20 +35,22 @@
             border-radius: 50%;
         }
     </style>
-    
+
 
 </div>
-
-<canvas id="myCanvas"></canvas>
+<canvas id="myCanvas" style="border:1px solid black;"></canvas>
 
 <script>
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
-    var lon = (@ViewBag.lon + 180) * c.clientWidth / 360;
-    var lat = (@ViewBag.lat + 90) * c.clientHeight / 90;
+    c.clientWidth = window.innerWidth;
+    c.clientHeight = window.innerHeight;
+    var lon = (@ViewBag.lon + 180) * window.innerWidth / 360;
+    var lat = (@ViewBag.lat + 90) * window.innerHeight / 90;
 
     ctx.beginPath();
-    ctx.arc(lon, lat, 5, 0, 2 * Math.PI);
+    ctx.arc(90, 50, 5, 0, 2 * Math.PI);
+    ctx.arc(lon+100, lat, 40, 0, 2 * Math.PI);
     ctx.fill();
        // $("div").append(ctx);
 </script>

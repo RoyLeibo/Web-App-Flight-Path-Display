@@ -32,7 +32,7 @@ namespace WebApplication1.Models
             set
             {
                 this.lat = value;
-                this.LonAndLat = new Point(value, this.Lon);
+                this.LonAndLat = new Point(this.Lon, value);
             }
         }
         private Point lonAndLat;
@@ -46,7 +46,7 @@ namespace WebApplication1.Models
             {
                 this.lonAndLat = value;
                 // notify the view model that this property is changed
-                //IoEvent?.Invoke();
+                IoEvent?.Invoke();
                 System.Diagnostics.Debug.WriteLine("({0}, {1})", this.lonAndLat.getX(), this.lonAndLat.getY());
             }
         }
@@ -76,6 +76,8 @@ namespace WebApplication1.Models
                 System.Diagnostics.Debug.WriteLine("Rudder: {0}", this.rudder);
             }
         }
+
+        public object MessageBox { get; private set; }
 
         /*
          * This function is called when the "Connect" button is clicked.
@@ -117,24 +119,38 @@ namespace WebApplication1.Models
             byte[] Buffer = new byte[1024];
             int recv;
             double value;
+            String num = "";
             List<String> RequestsStringsList = new List<String>();
-            RequestsStringsList.Add("get /position/longitude-deg");
-            RequestsStringsList.Add("get /position/latiude-deg");
+            RequestsStringsList.Add("get /position/longitude-deg\r\n");
+            RequestsStringsList.Add("get /position/latitude-deg\r\n");
+            
             if (this.isWriteToFile)
             {
-                RequestsStringsList.Add("get /controls/flight/rudder");
-                RequestsStringsList.Add("get /controls/engines/engine/throttle");
+                RequestsStringsList.Add("get /controls/flight/rudder\r\n");
+                RequestsStringsList.Add("get /controls/engines/engine/throttle\r\n");
             }
             while (true)
             {
                 for (int i = 0; i < RequestsStringsList.Count; i++)
                 {
+                    num = "";
                     System.Diagnostics.Debug.WriteLine("Sent: " + RequestsStringsList[i]);
                     Buffer = Encoding.ASCII.GetBytes(RequestsStringsList[i]);
                     this.stream.Write(Buffer, 0, Buffer.Length);
                     Buffer = new byte[1024];
                     recv = this.stream.Read(Buffer, 0, Buffer.Length);
-                    value = Convert.ToDouble(Encoding.ASCII.GetString(Buffer));
+                    String c = Encoding.ASCII.GetString(Buffer, 0, recv);
+                    int u = RequestsStringsList[i].Length -2;
+                   
+                    for (int j = u; j < c.Length; j++)
+                    {
+                         if(Char.IsDigit(c[j]) || c[j] == '.' || c[j] =='-')
+                        {
+                            num += c[j];
+                        }
+                    }
+                     value = Convert.ToDouble(num);
+                  
                     System.Diagnostics.Debug.WriteLine("Recieved: " + value);
                     switch (i)
                     {
