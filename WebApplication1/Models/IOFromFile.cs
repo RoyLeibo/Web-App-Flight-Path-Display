@@ -10,6 +10,7 @@ namespace WebApplication1.Models
     public class IOFromFile
     {
         public event handler IoEvent;
+        public const string SCENARIO_FILE = "~/App_Data/{0}.txt";
         private Point lonAndLat;
         public Point LonAndLat
         {
@@ -23,9 +24,10 @@ namespace WebApplication1.Models
                 IoEvent?.Invoke();
             }
         }
+        
         public void saveData(String FileName, double[] dataToSave)
         {
-            String FilePath = @"C:\temp\" + FileName;
+            String FilePath = HttpContext.Current.Server.MapPath(String.Format(SCENARIO_FILE, FileName));
             if (File.Exists(FilePath))
             {
                 File.Delete(FilePath);
@@ -43,7 +45,7 @@ namespace WebApplication1.Models
             List<String> fileData = new List<String>();
             try
             {
-                String FilePath = @"C:\temp\" + fileName;
+                String FilePath = HttpContext.Current.Server.MapPath(String.Format(SCENARIO_FILE, fileName));
                 if (File.Exists(FilePath))
                 {
                     StreamReader SR = new StreamReader(FilePath);

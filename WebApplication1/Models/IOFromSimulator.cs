@@ -102,8 +102,9 @@ namespace WebApplication1.Models
 
         public void getPoint()
         {
-            this.isRunOnce = true;
-            this.ReadDataFromSimulator();
+            //this.isRunOnce = true;
+            //this.ReadDataFromSimulator();
+            this.LonAndLat = new Point(2, 2);
         }
 
         /*
@@ -123,7 +124,7 @@ namespace WebApplication1.Models
             List<String> RequestsStringsList = new List<String>();
             RequestsStringsList.Add("get /position/longitude-deg\r\n");
             RequestsStringsList.Add("get /position/latitude-deg\r\n");
-            
+
             if (this.isWriteToFile)
             {
                 RequestsStringsList.Add("get /controls/flight/rudder\r\n");
@@ -140,17 +141,17 @@ namespace WebApplication1.Models
                     Buffer = new byte[1024];
                     recv = this.stream.Read(Buffer, 0, Buffer.Length);
                     String c = Encoding.ASCII.GetString(Buffer, 0, recv);
-                    int u = RequestsStringsList[i].Length -2;
-                   
+                    int u = RequestsStringsList[i].Length - 2;
+
                     for (int j = u; j < c.Length; j++)
                     {
-                         if(Char.IsDigit(c[j]) || c[j] == '.' || c[j] =='-')
+                        if (Char.IsDigit(c[j]) || c[j] == '.' || c[j] == '-')
                         {
                             num += c[j];
                         }
                     }
-                     value = Convert.ToDouble(num);
-                  
+                    value = Convert.ToDouble(num);
+
                     System.Diagnostics.Debug.WriteLine("Recieved: " + value);
                     switch (i)
                     {
