@@ -16,8 +16,13 @@
         }
 
         canvas {
-            width: 100%;
+            margin: 0;
             height: 100%;
+            object-fit: cover;
+            display: block;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
         }
 
         img {
@@ -40,23 +45,21 @@
         }
     </style>
 
-    <canvas id="myCanvas"></canvas>
+    <canvas id="myCanvas" style="border:1px solid black;">></canvas>
 </div>
 
 
 <script>
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
-    //c.clientWidth = window.innerWidth;
-    //c.clientHeight = window.innerHeight;
-    var lon = (@ViewBag.lon + 180) * c.clientWidth / 360;
-    var lat = (@ViewBag.lat + 90) * c.clientHeight / 180;
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
+    var lon = (@ViewBag.lon + 180) * c.width / 360;
+    var lat = (@ViewBag.lat + 90) * c.height / 180;
 
     ctx.beginPath();
-  //  ctx.arc(90, 50, 5, 0, 2 * Math.PI);
-    ctx.arc(lon, lat, 40, 0, 2 * Math.PI);
+    ctx.arc(lon, lat, 5, 0, 2 * Math.PI);
     ctx.fill();
-       // $("div").append(ctx);
 </script>
 
 
