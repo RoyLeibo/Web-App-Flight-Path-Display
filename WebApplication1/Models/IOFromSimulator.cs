@@ -104,7 +104,6 @@ namespace WebApplication1.Models
         {
             this.isRunOnce = true;
             this.ReadDataFromSimulator();
-            //this.LonAndLat = new Point(2, 2);
         }
 
         /*

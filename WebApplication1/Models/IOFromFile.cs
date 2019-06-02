@@ -11,6 +11,8 @@ namespace WebApplication1.Models
     {
         public event handler IoEvent;
         public const string SCENARIO_FILE = "~/App_Data/{0}.txt";
+        public List<String> LinesToSave { get; set; }
+        public String FileName { get; set; }
         private Point lonAndLat;
         public Point LonAndLat
         {
@@ -24,13 +26,26 @@ namespace WebApplication1.Models
                 IoEvent?.Invoke();
             }
         }
+
+        public IOFromFile()
+        {
+            this.LinesToSave = new List<String>();
+        }
         
         public void saveData(String FileName, double[] dataToSave)
         {
-            String FilePath = HttpContext.Current.Server.MapPath(String.Format(SCENARIO_FILE, FileName));
+            this.FileName = FileName;
+            this.LinesToSave.Add(this.createDataString(dataToSave));
+        }
+
+        public void SendDataToFile()
+        {
+            String FilePath = HttpContext.Current.Server.MapPath(String.Format(SCENARIO_FILE, this.FileName));
             StreamWriter SW = new StreamWriter(FilePath);
-            String data = this.createDataString(dataToSave);
-            SW.WriteLine(data);
+            foreach(String line in this.LinesToSave)
+            {
+                SW.WriteLine(line);
+            }
             SW.Flush();
             SW.Close();
         }

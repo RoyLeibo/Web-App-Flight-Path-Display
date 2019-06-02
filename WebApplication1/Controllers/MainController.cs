@@ -22,10 +22,6 @@ namespace WebApplication1.Controllers
                 this.lonAndLat = value;
                 ViewBag.lon = this.lonAndLat.getX();
                 ViewBag.lat = this.lonAndLat.getY();
-                //double[] a = new double[2];
-                //a[0] = this.lonAndLat.getX();
-                //a[1] = this.lonAndLat.getY();
-                //this.myModel.ioFromFile.saveData("Text", a);
             }
         }
 
