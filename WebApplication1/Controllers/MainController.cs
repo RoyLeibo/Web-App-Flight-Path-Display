@@ -22,10 +22,10 @@ namespace WebApplication1.Controllers
                 this.lonAndLat = value;
                 ViewBag.lon = this.lonAndLat.getX();
                 ViewBag.lat = this.lonAndLat.getY();
-                double[] a = new double[2];
-                a[0] = this.lonAndLat.getX();
-                a[1] = this.lonAndLat.getY();
-                this.myModel.ioFromFile.saveData("Text", a);
+                //double[] a = new double[2];
+                //a[0] = this.lonAndLat.getX();
+                //a[1] = this.lonAndLat.getY();
+                //this.myModel.ioFromFile.saveData("Text", a);
             }
         }
 
@@ -44,9 +44,7 @@ namespace WebApplication1.Controllers
         public ActionResult DisplayLocation(String ip, int port)
         {
 
-            //this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
-            this.myModel.ioFromSimulator.getPoint();
-            this.myModel.ioFromSimulator.getPoint();
+            this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
             this.myModel.ioFromSimulator.getPoint();
             return View();
         }

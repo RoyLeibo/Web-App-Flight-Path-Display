@@ -28,16 +28,11 @@ namespace WebApplication1.Models
         public void saveData(String FileName, double[] dataToSave)
         {
             String FilePath = HttpContext.Current.Server.MapPath(String.Format(SCENARIO_FILE, FileName));
-            if (File.Exists(FilePath))
-            {
-                File.Delete(FilePath);
-            }
             StreamWriter SW = new StreamWriter(FilePath);
             String data = this.createDataString(dataToSave);
             SW.WriteLine(data);
             SW.Flush();
-            SW.WriteLine(data);
-            SW.Flush();
+            SW.Close();
         }
 
         public void loadData(String fileName)
@@ -55,6 +50,7 @@ namespace WebApplication1.Models
                         line = SR.ReadLine();
                         fileData.Add(line);
                     } while (line != null);
+                    SR.Close();
                 }
             }
             catch (Exception e)
