@@ -16,7 +16,7 @@ namespace WebApplication1
             routes.MapRoute(
                 name: "displayLocation",
                 url: "display/{ip}/{port}",
-                defaults: new { controller = "Main", action = "DisplayLocation" }
+                defaults: new { controller = "Main", action = "CheckURL" }
                 );
 
             routes.MapRoute(
@@ -34,7 +34,7 @@ namespace WebApplication1
             routes.MapRoute(
                 name: "displayPath",
                 url: "display/{fileName}/{freq}",
-                defaults: new { controller = "Main", action = "displayPath" }
+                defaults: new { controller = "Main", action = "CheckURL" }
                 );
         }
     }

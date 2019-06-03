@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -40,6 +43,19 @@ namespace WebApplication1.Controllers
             return View();
         }
 
+        public void CheckURL(String ip, int port)
+        {
+            try
+            {
+                IPAddress address = IPAddress.Parse(ip);
+                this.DisplayLocation(ip, port);
+            }
+            catch (Exception e)
+            {
+                this.displayPath(ip, port);
+            }
+        }
+
         public ActionResult DisplayLocation(String ip, int port)
         {
             this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
@@ -51,11 +67,7 @@ namespace WebApplication1.Controllers
         public ActionResult DisplayAnimation(String ip, int port, int freq)
         {
             Session["freq"] = freq;
-            if (!this.IsConnected)
-            {
-                this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
-                this.IsConnected = true;
-            }
+            this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
             this.myModel.ioFromSimulator.ReadDataFromSimulator();
             return View();
         }
@@ -77,6 +89,26 @@ namespace WebApplication1.Controllers
         public void getLonAndLat()
         {
             this.LonAndLat = this.myModel.ioFromSimulator.LonAndLat;
+        }
+
+        [HttpPost]
+        public String GetPoint()
+        {
+            return this.ToXml(this.LonAndLat);
+        }
+
+        private string ToXml(Point LonAndLat)
+        {
+            //Initiate XML stuff
+            StringBuilder sb = new StringBuilder();
+            XmlWriterSettings settings = new XmlWriterSettings();
+            XmlWriter writer = XmlWriter.Create(sb, settings);
+            writer.WriteStartDocument();
+            LonAndLat.ToXml(writer);
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+            writer.Flush();
+            return sb.ToString();
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Xml;
 
 namespace WebApplication1.Models
 {
@@ -24,6 +25,14 @@ namespace WebApplication1.Models
         public double getY()
         {
             return this.y;
+        }
+
+        public void ToXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("Point");
+            writer.WriteElementString("Lon", this.x.ToString());
+            writer.WriteElementString("Lat", this.y.ToString());
+            writer.WriteEndElement();
         }
     }
 }
