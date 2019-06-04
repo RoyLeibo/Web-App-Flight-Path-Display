@@ -52,15 +52,14 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
     </head>
     <script>
-        var c = document.getElementById("myCanvas");
-        var ctx = c.getContext("2d");
-        c.width = window.innerWidth;
-        c.height = window.innerHeight;
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
         var x1 = 0;
         var y1 = 0;
         var x2 = 0;
         var y2 = 0;
-        var e = 0;
         var IntervalTime = @Session["freq"] * 1000
         Animation = (function () {
             $.post("@Url.Action("GetPoint")").done(function (xml) {
@@ -70,14 +69,12 @@
                 lon = parseFloat(lon);
                 lat = $xml.find("Lat").text();
                 lat = parseFloat(lat);
-                var c = document.getElementById("myCanvas");
-                c.width = window.innerWidth;
-                c.height = window.innerHeight;
-                var ctx = c.getContext("2d");
+                var canvas = document.getElementById("myCanvas");
+                var ctx = canvas.getContext("2d");
                 var renlon = Math.floor(Math.random() * 300) - 150;
                 var renlat = Math.floor(Math.random() * 300) - 150;
-                x2 = (lon + 180) * (c.width / 360) + renlon;
-                y2 = (lat + 90) * (c.height / 180) + renlat;
+                x2 = (lon + 180) * (canvas.width / 360) + renlon;
+                y2 = (lat + 90) * (canvas.height / 180) + renlat;
                 if (x1 != 0) {
                     ctx.beginPath();
                     ctx.moveTo(x1, y1);
@@ -86,16 +83,14 @@
                     x1 = x2;
                     y1 = y2;
                     }
-                    else {
-                        alert("j");
-                        x1 = x2;
-                        alert(x1);
-                        y1 = y2;
-                        alert(y1);
-                        ctx.beginPath();
-                        ctx.arc(x1, y1, 5, 0, 2 * Math.PI);
-                        ctx.fill();
-                    }
+                else {
+                    x1 = x2;
+                    y1 = y2;
+                    ctx.beginPath();
+                    ctx.arc(x1, y1, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+                    
+                }
             });
         });
         setInterval(Animation, IntervalTime);
