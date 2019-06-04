@@ -98,9 +98,20 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public void GetPoint()
+        public String GetPoint()
         {
-                this.myModel.ioFromSimulator.ReadDataFromSimulator();
+            this.myModel.ioFromSimulator.ReadDataFromSimulator();
+            StringBuilder sb = new StringBuilder();
+            XmlWriterSettings settings = new XmlWriterSettings();
+            XmlWriter writer = XmlWriter.Create(sb, settings);
+            writer.WriteStartDocument();
+            writer.WriteStartElement("Point");
+            writer.WriteElementString("Lon", Convert.ToString(this.LonAndLat.getX()));
+            writer.WriteElementString("Lat", Convert.ToString(this.LonAndLat.getY()));
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+            writer.Flush();
+            return sb.ToString();
         }
     }
 }

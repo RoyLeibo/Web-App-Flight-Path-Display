@@ -62,12 +62,17 @@
         var y2;
         var IntervalTime = @Session["freq"] * 1000
         Animation = (function () {
-            $.post("GetPoint").done(function () {
-                alert("check");
-                    var lon = @ViewBag.lon;
-                    var lat = @ViewBag.lat;
+            $.post("@Url.Action("GetPoint")").done(function (xml) {
+                var xmlDoc = $.parseXML(xml),
+                $xml = $(xmlDoc),
+                lon = $xml.find("Lon").text();
+                lat = $xml.find("Lat").text();
                     var c = document.getElementById("myCanvas");
-                    var ctx = c.getContext("2d");
+                var ctx = c.getContext("2d");
+                    ctx.beginPath();
+    ctx.arc(300, 300, 5, 0, 2 * Math.PI);
+    ctx.fill();
+
                      x2 = (lon + 180) * c.width / 360;
                      y2 = (lat + 90) * c.height / 180;
                     if (x1 != null) {

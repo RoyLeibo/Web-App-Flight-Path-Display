@@ -76,6 +76,25 @@ namespace WebApplication1.Models
             }
         }
 
+        private static IOFromSimulator instance = null;
+
+        private IOFromSimulator()
+        {
+        }
+
+        public static IOFromSimulator Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new IOFromSimulator();
+                }
+                return instance;
+            }
+        }
+
+
         public object MessageBox { get; private set; }
 
         /*
@@ -93,6 +112,8 @@ namespace WebApplication1.Models
 
         public void ConnectInOtherThread(String ip, int port)
         {;
+            this.ip = ip;
+            this.port = port;
             this.client = new TcpClient(ip, port);
             this.stream = this.client.GetStream();
             System.Diagnostics.Debug.WriteLine("Simulator Just Accepted Me");
