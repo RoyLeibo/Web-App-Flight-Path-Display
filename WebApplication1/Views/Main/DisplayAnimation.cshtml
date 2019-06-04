@@ -56,35 +56,45 @@
         var ctx = c.getContext("2d");
         c.width = window.innerWidth;
         c.height = window.innerHeight;
-        var x1;
-        var y1;
-        var x2;
-        var y2;
+        var x1 = 0;
+        var y1 = 0;
+        var x2 = 0;
+        var y2 = 0;
+        var e = 0;
         var IntervalTime = @Session["freq"] * 1000
         Animation = (function () {
             $.post("@Url.Action("GetPoint")").done(function (xml) {
                 var xmlDoc = $.parseXML(xml),
                 $xml = $(xmlDoc),
                 lon = $xml.find("Lon").text();
+                lon = parseFloat(lon);
                 lat = $xml.find("Lat").text();
-                    var c = document.getElementById("myCanvas");
+                lat = parseFloat(lat);
+                var c = document.getElementById("myCanvas");
+                c.width = window.innerWidth;
+                c.height = window.innerHeight;
                 var ctx = c.getContext("2d");
+                var renlon = Math.floor(Math.random() * 300) - 150;
+                var renlat = Math.floor(Math.random() * 300) - 150;
+                x2 = (lon + 180) * (c.width / 360) + renlon;
+                y2 = (lat + 90) * (c.height / 180) + renlat;
+                if (x1 != 0) {
                     ctx.beginPath();
-    ctx.arc(300, 300, 5, 0, 2 * Math.PI);
-    ctx.fill();
-
-                     x2 = (lon + 180) * c.width / 360;
-                     y2 = (lat + 90) * c.height / 180;
-                    if (x1 != null) {
-                        ctx.moveTo(x1, y1);
-                        ctx.lineTo(x2, y2);
-                        x1 = x2;
-                        y1 = y2;
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.stroke();
+                    x1 = x2;
+                    y1 = y2;
                     }
                     else {
+                        alert("j");
                         x1 = x2;
+                        alert(x1);
                         y1 = y2;
-                        ctx.arc(x1, y2, 5, 0, 2 * Math.PI);
+                        alert(y1);
+                        ctx.beginPath();
+                        ctx.arc(x1, y1, 5, 0, 2 * Math.PI);
+                        ctx.fill();
                     }
             });
         });
