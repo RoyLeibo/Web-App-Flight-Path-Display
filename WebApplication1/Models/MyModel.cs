@@ -17,5 +17,10 @@ namespace WebApplication1.Models
             this.ioFromFile = IOFromFile.Instance;
             this.ioFromSimulator = IOFromSimulator.Instance;
         }
+
+        public void CloseConnection()
+        {
+            this.ioFromSimulator.client.Close();
+        }
     }
 }

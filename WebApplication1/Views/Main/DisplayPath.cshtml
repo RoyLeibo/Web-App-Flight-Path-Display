@@ -62,7 +62,11 @@
         var y2 = 0;
         var IntervalTime = @Session["freq"] * 1000
         Animation = (function () {
-            $.post("@Url.Action("GetPoint")").done(function (xml) {
+            $.post("@Url.Action("GetPointFromFile")").done(function (xml) {
+                if (xml == "Done") {
+                    alert("Bye Bye");
+                    clearInterval(SetInterval);
+                }
                 var xmlDoc = $.parseXML(xml),
                 $xml = $(xmlDoc),
                 lon = $xml.find("Lon").text();
@@ -93,6 +97,6 @@
                 }
             });
         });
-        setInterval(Animation, IntervalTime);
+    var SetInterval = setInterval(Animation, IntervalTime);
         Animation();
 </script>

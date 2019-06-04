@@ -12,6 +12,7 @@ namespace WebApplication1.Models
         public event handler IoEvent;
         public const string SCENARIO_FILE = "~/App_Data/{0}.txt";
         public List<String> LinesToSave { get; set; }
+        public List<String> DataFromFile { get; set; }
         public String FileName { get; set; }
         private Point lonAndLat;
         public Point LonAndLat
@@ -32,7 +33,6 @@ namespace WebApplication1.Models
         {
             this.LinesToSave = new List<String>();
         }
-        
 
         public static IOFromFile Instance
         {
@@ -56,7 +56,7 @@ namespace WebApplication1.Models
         {
             String FilePath = HttpContext.Current.Server.MapPath(String.Format(SCENARIO_FILE, this.FileName));
             StreamWriter SW = new StreamWriter(FilePath);
-            foreach(String line in this.LinesToSave)
+            foreach (String line in this.LinesToSave)
             {
                 SW.WriteLine(line);
             }
@@ -74,11 +74,11 @@ namespace WebApplication1.Models
                 {
                     StreamReader SR = new StreamReader(FilePath);
                     String line = "";
-                    do
+                    while ((line = SR.ReadLine()) != null)
                     {
-                        line = SR.ReadLine();
+                        ;
                         fileData.Add(line);
-                    } while (line != null);
+                    }
                     SR.Close();
                 }
             }
@@ -86,7 +86,7 @@ namespace WebApplication1.Models
             {
 
             }
-            this.parseFileData(fileData);
+            this.DataFromFile = fileData;
         }
 
         public String createDataString(double[] dataToSave)
@@ -99,14 +99,15 @@ namespace WebApplication1.Models
             return data;
         }
 
-        public void parseFileData(List<String> fileData)
+        public bool parseFileData()
         {
-            foreach (String line in fileData)
+            if (this.DataFromFile.Count == 0)
             {
-                if(line == null)
-                {
-                    break;
-                }
+                return false;
+            }
+            else
+            {
+                String line = this.DataFromFile[0];
                 int StartOfLon = 0;
                 int EndOfLon = line.IndexOf('$', StartOfLon);
                 // Extract the Lon property from the data string by finding the closest
@@ -118,12 +119,8 @@ namespace WebApplication1.Models
                 // ',' to it after the Lon.
                 double Lat = Double.Parse(line.Substring(StartOfLat, EndOfLat - StartOfLat));
                 this.LonAndLat = new Point(Lon, Lat);
-                //int StartOfThrottle = EndOfLat + 1;
-                //int EndOfThrottle = line.IndexOf('$', StartOfThrottle);
-                //this.Throttle = Double.Parse(line.Substring(StartOfThrottle, EndOfThrottle - StartOfThrottle));
-                //int StartOfRudder = EndOfThrottle + 1;
-                //int EndOfRudder = line.IndexOf(',', StartOfRudder);
-                //this.Rudder = Double.Parse(line.Substring(StartOfRudder, EndOfRudder - StartOfRudder));
+                this.DataFromFile.RemoveAt(0);
+                return true;
             }
         }
     }

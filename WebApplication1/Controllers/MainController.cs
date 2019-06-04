@@ -80,7 +80,6 @@ namespace WebApplication1.Controllers
             this.myModel.ioFromSimulator.FileName = fileName;
             this.myModel.ioFromSimulator.isWriteToFile = true;
             this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
-            this.myModel.ioFromSimulator.ReadDataFromSimulator();
             return View();
 
         }
@@ -118,21 +117,30 @@ namespace WebApplication1.Controllers
         public void SaveData()
         {
             this.myModel.ioFromFile.SendDataToFile();
+            this.myModel.CloseConnection();
         }
+
         [HttpPost]
         public String GetPointFromFile()
         {
-            StringBuilder sb = new StringBuilder();
-            XmlWriterSettings settings = new XmlWriterSettings();
-            XmlWriter writer = XmlWriter.Create(sb, settings);
-            writer.WriteStartDocument();
-            writer.WriteStartElement("Point");
-            writer.WriteElementString("Lon", Convert.ToString(this.LonAndLat.getX()));
-            writer.WriteElementString("Lat", Convert.ToString(this.LonAndLat.getY()));
-            writer.WriteEndElement();
-            writer.WriteEndDocument();
-            writer.Flush();
-            return sb.ToString();
+            if (this.myModel.ioFromFile.parseFileData())
+            {
+                StringBuilder sb = new StringBuilder();
+                XmlWriterSettings settings = new XmlWriterSettings();
+                XmlWriter writer = XmlWriter.Create(sb, settings);
+                writer.WriteStartDocument();
+                writer.WriteStartElement("Point");
+                writer.WriteElementString("Lon", Convert.ToString(this.LonAndLat.getX()));
+                writer.WriteElementString("Lat", Convert.ToString(this.LonAndLat.getY()));
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+                writer.Flush();
+                return sb.ToString();
+            }
+            else
+            {
+                return "Done";
+            }
         }
     }
 }
