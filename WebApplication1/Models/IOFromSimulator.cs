@@ -20,6 +20,8 @@ namespace WebApplication1.Models
         public TcpClient client { get; set; }
         public NetworkStream stream { get; set; }
         public bool isWriteToFile { get; set; }
+        public String FileName { get; set; }
+        public IOFromFile ioFromFile {get; set;}
         public double Lon { get; set; }
         public double lat;
         public double Lat
@@ -80,6 +82,7 @@ namespace WebApplication1.Models
 
         private IOFromSimulator()
         {
+                this.ioFromFile = new IOFromFile();
         }
 
         public static IOFromSimulator Instance
@@ -187,7 +190,7 @@ namespace WebApplication1.Models
             if (this.isWriteToFile)
             {
                 double[] dataArray = { this.Lon, this.Lat, this.Throttle, this.Rudder };
-                new IOFromFile().saveData("Flight1.txt", dataArray);
+                this.ioFromFile.saveData(this.FileName, dataArray);
             }
         }
 

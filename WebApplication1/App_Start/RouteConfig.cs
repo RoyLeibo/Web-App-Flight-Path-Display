@@ -16,7 +16,9 @@ namespace WebApplication1
             routes.MapRoute(
                 name: "displayLocation",
                 url: "display/{ip}/{port}",
-                defaults: new { controller = "Main", action = "CheckURL" }
+                defaults: new { controller = "Main", action = "DisplayLocation" },
+                                new { ip = @"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$" }
+
                 );
 
             routes.MapRoute(
@@ -25,22 +27,16 @@ namespace WebApplication1
                 defaults: new { controller = "Main", action = "DisplayAnimation" }
                 );
 
-            //routes.MapRoute(
-            //    name: "displayGetPoint",
-            //    url: "display/getpoint",
-            //    defaults: new { controller = "Main", action = "GetPoint" }
-            //    );
-
             routes.MapRoute(
                 name: "save",
-                url: "display/{ip}/{port}/{freq}/{sec}/{fileName}",
-                defaults: new { controller = "Main", action = "save" }
+                url: "save/{ip}/{port}/{freq}/{sec}/{fileName}",
+                defaults: new { controller = "Main", action = "SaveData" }
                 );
 
             routes.MapRoute(
                 name: "displayPath",
                 url: "display/{fileName}/{freq}",
-                defaults: new { controller = "Main", action = "CheckURL" }
+                defaults: new { controller = "Main", action = "DisplayPath" }
                 );
 
             routes.MapRoute(

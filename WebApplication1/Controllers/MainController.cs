@@ -13,8 +13,7 @@ namespace WebApplication1.Controllers
     public class MainController : Controller
     {
         private MyModel myModel;
-        private bool IsConnected { get; set; }
-        private bool IsRunning{ get; set; }
+        private bool IsRunning { get; set; }
         private Point lonAndLat;
         public Point LonAndLat
         {
@@ -37,7 +36,6 @@ namespace WebApplication1.Controllers
             this.myModel = new MyModel();
             this.myModel.ioFromSimulator.IoEvent += getLonAndLat;
             this.myModel.ioFromFile.IoEvent += getLonAndLat;
-            this.IsConnected = false;
             this.IsRunning = false;
         }
 
@@ -55,7 +53,7 @@ namespace WebApplication1.Controllers
             }
             catch (Exception e)
             {
-                this.displayPath(ip, port);
+                this.DisplayPath(ip, port);
             }
         }
 
@@ -70,25 +68,25 @@ namespace WebApplication1.Controllers
         public ActionResult DisplayAnimation(String ip, int port, int freq)
         {
             Session["freq"] = freq;
-            if (!this.IsConnected)
-            {
-                this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
-            }
+            this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
             this.myModel.ioFromSimulator.ReadDataFromSimulator();
             return View();
         }
 
-        public ActionResult save(String ip, int port, int freq, int sec, String fileName)
+        public ActionResult Save(String ip, int port, int freq, int sec, String fileName)
         {
+            Session["sec"] = sec;
+            Session["freq"] = freq;
+            this.myModel.ioFromSimulator.FileName = fileName;
             this.myModel.ioFromSimulator.isWriteToFile = true;
             this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
             this.myModel.ioFromSimulator.ReadDataFromSimulator();
             return View();
         }
 
-        public ActionResult displayPath(String fileName, int freq)
+        public ActionResult DisplayPath(String fileName, int freq)
         {
-            this.myModel.ioFromFile.loadData(fileName);
+            //this.myModel.ioFromFile.loadData(fileName);
             return View();
         }
 
@@ -112,6 +110,12 @@ namespace WebApplication1.Controllers
             writer.WriteEndDocument();
             writer.Flush();
             return sb.ToString();
+        }
+
+        [HttpPost]
+        public void SaveData()
+        {
+            this.myModel.ioFromFile.SendDataToFile();
         }
     }
 }
