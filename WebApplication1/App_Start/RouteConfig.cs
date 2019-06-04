@@ -25,6 +25,12 @@ namespace WebApplication1
                 defaults: new { controller = "Main", action = "DisplayAnimation" }
                 );
 
+            //routes.MapRoute(
+            //    name: "displayGetPoint",
+            //    url: "display/getpoint",
+            //    defaults: new { controller = "Main", action = "GetPoint" }
+            //    );
+
             routes.MapRoute(
                 name: "save",
                 url: "display/{ip}/{port}/{freq}/{sec}/{fileName}",

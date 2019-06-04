@@ -14,6 +14,7 @@ namespace WebApplication1.Controllers
     {
         private MyModel myModel;
         private bool IsConnected { get; set; }
+        private bool IsRunning{ get; set; }
         private Point lonAndLat;
         public Point LonAndLat
         {
@@ -23,6 +24,7 @@ namespace WebApplication1.Controllers
             }
             set
             {
+                this.IsRunning = true;
                 this.lonAndLat = value;
                 ViewBag.lon = this.lonAndLat.getX();
                 ViewBag.lat = this.lonAndLat.getY();
@@ -36,6 +38,7 @@ namespace WebApplication1.Controllers
             this.myModel.ioFromSimulator.IoEvent += getLonAndLat;
             this.myModel.ioFromFile.IoEvent += getLonAndLat;
             this.IsConnected = false;
+            this.IsRunning = false;
         }
 
         public ActionResult Index()
@@ -58,16 +61,19 @@ namespace WebApplication1.Controllers
 
         public ActionResult DisplayLocation(String ip, int port)
         {
+
             this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
             this.myModel.ioFromSimulator.getPoint();
             return View();
         }
 
-        [HttpGet]
         public ActionResult DisplayAnimation(String ip, int port, int freq)
         {
             Session["freq"] = freq;
-            this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
+            if (!this.IsConnected)
+            {
+                this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
+            }
             this.myModel.ioFromSimulator.ReadDataFromSimulator();
             return View();
         }
@@ -92,23 +98,9 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public String GetPoint()
+        public void GetPoint()
         {
-            return this.ToXml(this.LonAndLat);
-        }
-
-        private string ToXml(Point LonAndLat)
-        {
-            //Initiate XML stuff
-            StringBuilder sb = new StringBuilder();
-            XmlWriterSettings settings = new XmlWriterSettings();
-            XmlWriter writer = XmlWriter.Create(sb, settings);
-            writer.WriteStartDocument();
-            LonAndLat.ToXml(writer);
-            writer.WriteEndElement();
-            writer.WriteEndDocument();
-            writer.Flush();
-            return sb.ToString();
+                this.myModel.ioFromSimulator.ReadDataFromSimulator();
         }
     }
 }

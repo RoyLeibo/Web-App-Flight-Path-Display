@@ -47,7 +47,7 @@
         <canvas id="myCanvas" style="border:1px solid black;">></canvas>
     </div>
 
-    <script src="jquery-3.2.1.js"></script>
+    <script src="jquery-1.10.2.min.js"></script>
     <head>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
     </head>
@@ -62,11 +62,10 @@
         var y2;
         var IntervalTime = @Session["freq"] * 1000
         Animation = (function () {
-            $.post('@Url.Action("Main/GetPoint")').done(function (xml) {
-                var xmlDoc = $.parseXML(xml),
-                    $xml = $(xmlDoc),
-                    lon = $xml.find("Lon").text;
-                    qlat = $xml.find("Lat").text;
+            $.post("GetPoint").done(function () {
+                alert("check");
+                    var lon = @ViewBag.lon;
+                    var lat = @ViewBag.lat;
                     var c = document.getElementById("myCanvas");
                     var ctx = c.getContext("2d");
                      x2 = (lon + 180) * c.width / 360;
