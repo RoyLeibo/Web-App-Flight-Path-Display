@@ -82,11 +82,13 @@ namespace WebApplication1.Controllers
             this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
             this.myModel.ioFromSimulator.ReadDataFromSimulator();
             return View();
+
         }
 
         public ActionResult DisplayPath(String fileName, int freq)
         {
-            //this.myModel.ioFromFile.loadData(fileName);
+            Session["freq"] = freq;
+            this.myModel.ioFromFile.loadData(fileName);
             return View();
         }
 
@@ -116,6 +118,21 @@ namespace WebApplication1.Controllers
         public void SaveData()
         {
             this.myModel.ioFromFile.SendDataToFile();
+        }
+        [HttpPost]
+        public String GetPointFromFile()
+        {
+            StringBuilder sb = new StringBuilder();
+            XmlWriterSettings settings = new XmlWriterSettings();
+            XmlWriter writer = XmlWriter.Create(sb, settings);
+            writer.WriteStartDocument();
+            writer.WriteStartElement("Point");
+            writer.WriteElementString("Lon", Convert.ToString(this.LonAndLat.getX()));
+            writer.WriteElementString("Lat", Convert.ToString(this.LonAndLat.getY()));
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+            writer.Flush();
+            return sb.ToString();
         }
     }
 }

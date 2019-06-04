@@ -32,6 +32,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,6 +42,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -128,8 +130,8 @@
     <Content Include="Views\Main\DisplayLocation.cshtml" />
     <Content Include="Views\Main\DisplayAnimation.cshtml" />
     <Content Include="Views\Main\DisplayPath.cshtml" />
-    <Content Include="Views\Shared\Save.cshtml" />
-    <Content Include="Views\Main\SaveData.cshtml" />
+    <Content Include="Views\Shared\SaveP.cshtml" />
+    <Content Include="Views\Main\Save.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

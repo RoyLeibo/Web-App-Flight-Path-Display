@@ -2,53 +2,52 @@
 @{
     ViewBag.Title = "Save";
 }
-    <div>
-        <style id="map1">
+<div>
+    <style id="map1">
 
-            html, body {
-                margin: 0;
-                height: 100%;
-                background-image: url(../../../Content/export-map-share.png);
-                background-position: center;
-                background-repeat: no-repeat;
-                background-size: cover;
-            }
+        html, body {
+            margin: 0;
+            height: 100%;
+            background-image: url(/Content/export-map-share.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
 
-            canvas {
-                margin: 0;
-                height: 100%;
-                object-fit: cover;
-                display: block;
-                background-position: center;
-                background-repeat: no-repeat;
-                background-size: cover;
-            }
+        canvas {
+            margin: 0;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
 
-            img {
-                display: block;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-            div {
-                position: relative;
-            }
+        div {
+            position: relative;
+        }
 
-            .bluePoint {
-                position: static;
-                background: Blue;
-                height: 16px;
-                width: 16px;
-                border-radius: 50%;
-            }
-        </style>
+        .bluePoint {
+            position: static;
+            background: Blue;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+        }
+    </style>
 
-        <canvas id="myCanvas"></canvas>
-    </div>
+    <canvas id="myCanvas" style="border:1px solid black;">></canvas>
+</div>
 
 <script src="jquery-1.10.2.min.js"></script>
-
 <head>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 </head>
@@ -63,20 +62,20 @@
     var x2 = 0;
     var y2 = 0;
     var i = 1;
+    var bool = false;
     var dur = @Session["sec"];
     var freq = @Session["freq"];
-    var setInterval = setInterval(start, freq * 1000);
+    var t = setInterval(start, freq * 1000);
     function start() {
         if (i * freq > dur) {
-            alert("Done!");
-            clearInterval(setInterval);
+            clearInterval(t);
+            bool = true;
         }
-        alert("Number " + i);
-        i++;
+        ++i;
             $.post("@Url.Action("GetPoint")").done(function (xml) {
                 var xmlDoc = $.parseXML(xml),
-                    $xml = $(xmlDoc),
-                    lon = $xml.find("Lon").text();
+                $xml = $(xmlDoc),
+                lon = $xml.find("Lon").text();
                 lon = parseFloat(lon);
                 lat = $xml.find("Lat").text();
                 lat = parseFloat(lat);
@@ -99,6 +98,16 @@
                     ctx.arc(x1, y1, 5, 0, 2 * Math.PI);
                     ctx.fill();
                 }
-            });
+                if (bool) {
+                    $.post("@Url.Action("SaveData")").done(function (xml) {
+                    });
+                    alert("Done!")
+                }
+        });
+
+
     }
+
+
 </script>
+

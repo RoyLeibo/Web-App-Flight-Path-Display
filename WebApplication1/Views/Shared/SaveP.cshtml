@@ -1,7 +1,7 @@
-﻿@{
-        ViewBag.Title = "DisplayAnimation";
+﻿
+@{
+    ViewBag.Title = "SaveP";
 }
-
     <div>
         <style id="map1">
 
@@ -44,33 +44,42 @@
             }
         </style>
 
-        <canvas id="myCanvas" style="border:1px solid black;"></canvas>
+        <canvas id="myCanvas"></canvas>
     </div>
 
-    <script src="jquery-1.10.2.min.js"></script>
-    <head>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-    </head>
-    <script>
-        var canvas = document.getElementById("myCanvas");
-        var ctx = canvas.getContext("2d");
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        var x1 = 0;
-        var y1 = 0;
-        var x2 = 0;
-        var y2 = 0;
-        var IntervalTime = @Session["freq"] * 1000
-        Animation = (function () {
+<script src="jquery-1.10.2.min.js"></script>
+
+<head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+</head>
+
+<script>
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    var x1 = 0;
+    var y1 = 0;
+    var x2 = 0;
+    var y2 = 0;
+    var i = 1;
+    var dur = @Session["sec"];
+    var freq = @Session["freq"];
+    var setInterval = setInterval(start, freq * 1000);
+    function start() {
+        if (i * freq > dur) {
+            alert("Done!");
+            clearInterval(setInterval);
+        }
+        alert("Number " + i);
+        i++;
             $.post("@Url.Action("GetPoint")").done(function (xml) {
                 var xmlDoc = $.parseXML(xml),
-                $xml = $(xmlDoc),
-                lon = $xml.find("Lon").text();
+                    $xml = $(xmlDoc),
+                    lon = $xml.find("Lon").text();
                 lon = parseFloat(lon);
                 lat = $xml.find("Lat").text();
                 lat = parseFloat(lat);
-                var canvas = document.getElementById("myCanvas");
-                var ctx = canvas.getContext("2d");
                 var renlon = Math.floor(Math.random() * 300) - 150;
                 var renlat = Math.floor(Math.random() * 300) - 150;
                 x2 = (lon + 180) * (canvas.width / 360) + renlon;
@@ -82,18 +91,14 @@
                     ctx.stroke();
                     x1 = x2;
                     y1 = y2;
-                    }
+                }
                 else {
                     x1 = x2;
                     y1 = y2;
                     ctx.beginPath();
                     ctx.arc(x1, y1, 5, 0, 2 * Math.PI);
                     ctx.fill();
-                    
                 }
             });
-        });
-        setInterval(Animation, IntervalTime);
-        Animation();
-    </script>
-
+    }
+</script>

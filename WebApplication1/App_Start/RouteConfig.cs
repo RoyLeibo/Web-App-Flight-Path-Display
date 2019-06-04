@@ -27,11 +27,11 @@ namespace WebApplication1
                 defaults: new { controller = "Main", action = "DisplayAnimation" }
                 );
 
-            routes.MapRoute(
-                name: "save",
-                url: "save/{ip}/{port}/{freq}/{sec}/{fileName}",
-                defaults: new { controller = "Main", action = "SaveData" }
-                );
+            //routes.MapRoute(
+            //    name:"saveData",
+            //    url: "save/{ip}/{port}/{freq}/{sec}/{fileName}",
+            //    defaults: new { controller = "Main", action = "SaveData" }
+            //    );
 
             routes.MapRoute(
                 name: "displayPath",
@@ -43,6 +43,11 @@ namespace WebApplication1
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Main", action = "Index", id = UrlParameter.Optional }
+            );
+            routes.MapRoute(
+                name: "sava",
+                url:"save/{ip}/{port}/{freq}/{sec}/{fileName}",
+                defaults: new { controller = "Main", action = "Save" }
             );
         }
     }

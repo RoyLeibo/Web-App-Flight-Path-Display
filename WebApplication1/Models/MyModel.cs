@@ -14,7 +14,7 @@ namespace WebApplication1.Models
 
         public MyModel()
         {
-            this.ioFromFile = new IOFromFile();
+            this.ioFromFile = IOFromFile.Instance;
             this.ioFromSimulator = IOFromSimulator.Instance;
         }
     }

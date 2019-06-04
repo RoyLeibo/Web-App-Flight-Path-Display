@@ -26,12 +26,26 @@ namespace WebApplication1.Models
                 IoEvent?.Invoke();
             }
         }
+        private static IOFromFile instance = null;
 
-        public IOFromFile()
+        private IOFromFile()
         {
             this.LinesToSave = new List<String>();
         }
         
+
+        public static IOFromFile Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new IOFromFile();
+                }
+                return instance;
+            }
+        }
+
         public void saveData(String FileName, double[] dataToSave)
         {
             this.FileName = FileName;

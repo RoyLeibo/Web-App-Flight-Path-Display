@@ -82,7 +82,7 @@ namespace WebApplication1.Models
 
         private IOFromSimulator()
         {
-                this.ioFromFile = new IOFromFile();
+                this.ioFromFile = IOFromFile.Instance;
         }
 
         public static IOFromSimulator Instance
@@ -160,7 +160,7 @@ namespace WebApplication1.Models
                 recv = this.stream.Read(Buffer, 0, Buffer.Length);
                 String c = Encoding.ASCII.GetString(Buffer, 0, recv);
                 int u = RequestsStringsList[i].Length - 2;
-
+                System.Diagnostics.Debug.WriteLine("Sent: " + c);
                 for (int j = u; j < c.Length; j++)
                 {
                     if (Char.IsDigit(c[j]) || c[j] == '.' || c[j] == '-')
