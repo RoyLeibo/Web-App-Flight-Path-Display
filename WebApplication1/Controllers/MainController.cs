@@ -37,8 +37,8 @@ namespace WebApplication1.Controllers
         public MainController()
         {
             this.myModel = new MyModel();
-            this.myModel.ioFromSimulator.IoEvent += getLonAndLat;
-            this.myModel.ioFromFile.IoEvent += getLonAndLat;
+            this.myModel.ioFromSimulator.IoEvent += getLonAndLatFromSimulator;
+            this.myModel.ioFromFile.IoEvent += getLonAndLatFromFile;
             this.IsRunning = false;
         }
          
@@ -109,9 +109,14 @@ namespace WebApplication1.Controllers
          * This function get the value of lon and lat from
          * simulator and save them in the controller
          **/
-        public void getLonAndLat()
+        public void getLonAndLatFromSimulator()
         {
             this.LonAndLat = this.myModel.ioFromSimulator.LonAndLat;
+        }
+
+        public void getLonAndLatFromFile()
+        {
+            this.LonAndLat = this.myModel.ioFromFile.LonAndLat;
         }
 
         /*

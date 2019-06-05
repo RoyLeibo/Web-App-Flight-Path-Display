@@ -97,7 +97,6 @@ namespace WebApplication1.Models
                     String line = "";
                     while ((line = SR.ReadLine()) != null)
                     {
-                        ;
                         fileData.Add(line);
                     }
                     SR.Close();

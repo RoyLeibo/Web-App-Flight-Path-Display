@@ -60,46 +60,48 @@
         var y1 = 0;
         var x2 = 0;
         var y2 = 0;
-        var IntervalTime = @Session["freq"] * 1000
+    var IntervalTime = @Session["freq"] * 1000;
+    var setInterval;
         Animation = (function () {
             $.post("@Url.Action("GetPointFromFile")").done(function (xml) {
                 // the xml will be done when all data from file has been drawed on screen
                 if (xml == "Done") {
                     alert("Done!");
-                    clearInterval(SetInterval);
+                    clearInterval(setInterval);
                 }
-                // parse xml
-                var xmlDoc = $.parseXML(xml),
-                $xml = $(xmlDoc),
-                lon = $xml.find("Lon").text();
-                lon = parseFloat(lon);
-                lat = $xml.find("Lat").text();
-                lat = parseFloat(lat);
-                var canvas = document.getElementById("myCanvas");
-                var ctx = canvas.getContext("2d");
-                // normalized lon and lat
-                x2 = (lon + 180) * (canvas.width / 360);
-                y2 = (lat + 90) * (canvas.height / 180);
-                if (x1 != 0) {
-                        // draw a line
-                    ctx.beginPath();
-                    ctx.moveTo(x1, y1);
-                    ctx.lineTo(x2, y2);
-                    ctx.stroke();
-                    x1 = x2;
-                    y1 = y2;
-                    }
                 else {
-                    // draw a circle at the plane start position
-                    x1 = x2;
-                    y1 = y2;
-                    ctx.beginPath();
-                    ctx.arc(x1, y1, 5, 0, 2 * Math.PI);
-                    ctx.fill();
-
+                    // parse xml
+                    var xmlDoc = $.parseXML(xml),
+                        $xml = $(xmlDoc),
+                        lon = $xml.find("Lon").text();
+                    lon = parseFloat(lon);
+                    lat = $xml.find("Lat").text();
+                    lat = parseFloat(lat);
+                    var canvas = document.getElementById("myCanvas");
+                    var ctx = canvas.getContext("2d");
+                    // normalized lon and lat
+                    x2 = (lon + 180) * (canvas.width / 360);
+                    y2 = (lat + 90) * (canvas.height / 180);
+                    if (x1 != 0) {
+                        // draw a line
+                        ctx.beginPath();
+                        ctx.moveTo(x1, y1);
+                        ctx.lineTo(x2, y2);
+                        ctx.stroke();
+                        x1 = x2;
+                        y1 = y2;
+                    }
+                    else {
+                        // draw a circle at the plane start position
+                        x1 = x2;
+                        y1 = y2;
+                        ctx.beginPath();
+                        ctx.arc(x1, y1, 5, 0, 2 * Math.PI);
+                        ctx.fill();
+                    }
                 }
             });
         });
-    var SetInterval = setInterval(Animation, IntervalTime);
+    setInterval = setInterval(Animation, IntervalTime);
         Animation();
 </script>
