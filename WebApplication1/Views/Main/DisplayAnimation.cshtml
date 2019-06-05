@@ -65,8 +65,6 @@
         var x2 = 0;
         var y2 = 0;
         var IntervalTime = @Session["freq"] * 1000;
-        var ip = @Session["ip"];
-        var port = @Session["port"];
         Animation = (function () {
             $.post("@Url.Action("GetPoint")").done(function (xml) {
                 var xmlDoc = $.parseXML(xml),
@@ -102,18 +100,8 @@
         setInterval(Animation, IntervalTime);
         Animation();
         $(window).on('beforeunload', function() {
-            $.post("@Url.Action("ReloadPage")", ip, port);
+            $.post("@Url.Action("ReloadPage")");
             return;
-});
-        @*window.onbeforeunload = function (e) {
-            //was load from network
-            if (isNetworkDisplay == "1") {
-                disconnect();
-            }
-            //was load from file
-            else {
-                $.post("@Url.Action("CloseFileRead")");
-            }
-        }*@
+        });
     </script>
 

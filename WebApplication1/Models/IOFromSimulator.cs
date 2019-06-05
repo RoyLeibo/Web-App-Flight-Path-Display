@@ -115,10 +115,18 @@ namespace WebApplication1.Models
 
         public void ConnectInOtherThread(String ip, int port)
         {;
-            this.ip = ip;
-            this.port = port;
-            this.client = new TcpClient(ip, port);
-            this.stream = this.client.GetStream();
+            if(ip == null && port == 0)
+            {
+                this.client = new TcpClient(this.ip, this.port);
+                this.stream = this.client.GetStream();
+            }
+            else
+            {
+                this.ip = ip;
+                this.port = port;
+                this.client = new TcpClient(ip, port);
+                this.stream = this.client.GetStream();
+            }
             System.Diagnostics.Debug.WriteLine("Simulator Just Accepted Me");
         }
 

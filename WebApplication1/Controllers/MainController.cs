@@ -188,6 +188,19 @@ namespace WebApplication1.Controllers
             {
                 return "Done";
             }
+        }   
+
+        [HttpPost]
+        public void CloseFileRead()
+        {
+            this.myModel.CloseConnection();
+        }
+
+        [HttpPost]
+        public void ReloadPage()
+        {
+            this.myModel.CloseConnection();
+            this.myModel.ioFromSimulator.ConnectInOtherThread(null, 0);
         }
     }
 }
