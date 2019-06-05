@@ -55,15 +55,23 @@ namespace WebApplication1.Models
             }
         }
 
+        /*
+         * This function get file name and array of string 
+         * and add the array to list that will be write to the file
+         **/
         public void saveData(String FileName, double[] dataToSave)
         {
             this.FileName = FileName;
             this.LinesToSave.Add(this.createDataString(dataToSave));
         }
 
+        /*
+         * This function write the data to the file. 
+         **/ 
         public void SendDataToFile()
         {
-            String FilePath = HttpContext.Current.Server.MapPath(String.Format(SCENARIO_FILE, this.FileName));
+            String FilePath = HttpContext.Current.Server.MapPath(String.Format(SCENARIO_FILE, 
+                this.FileName));
             StreamWriter SW = new StreamWriter(FilePath);
             foreach (String line in this.LinesToSave)
             {
@@ -73,12 +81,16 @@ namespace WebApplication1.Models
             SW.Close();
         }
 
+        /*
+         * This function load the data from the file to the program
+         **/
         public void loadData(String fileName)
         {
             List<String> fileData = new List<String>();
             try
             {
-                String FilePath = HttpContext.Current.Server.MapPath(String.Format(SCENARIO_FILE, fileName));
+                String FilePath = HttpContext.Current.Server.MapPath(String.Format(SCENARIO_FILE,
+                    fileName));
                 if (File.Exists(FilePath))
                 {
                     StreamReader SR = new StreamReader(FilePath);
@@ -98,6 +110,10 @@ namespace WebApplication1.Models
             this.DataFromFile = fileData;
         }
 
+        /*
+         * This function order the data from simulator
+         * before the data wittien to the file.
+         **/
         public String createDataString(double[] dataToSave)
         {
             String data = "";
@@ -108,6 +124,10 @@ namespace WebApplication1.Models
             return data;
         }
 
+        /*
+         * This function parse each line from the file
+         * to data.
+         **/ 
         public bool parseFileData()
         {
             if (this.DataFromFile.Count == 0)
