@@ -12,12 +12,18 @@ namespace WebApplication1.Models
         public IOFromSimulator ioFromSimulator { get; set; }
         public IOFromFile ioFromFile { get; set; }
 
+        /*
+         * This function is the constructor.
+         **/
         public MyModel()
         {
             this.ioFromFile = IOFromFile.Instance;
             this.ioFromSimulator = IOFromSimulator.Instance;
         }
 
+        /*
+         * This function close the connection with the simulator.
+         **/
         public void CloseConnection()
         {
             this.ioFromSimulator.client.Close();

@@ -79,12 +79,18 @@ namespace WebApplication1.Models
         }
 
         private static IOFromSimulator instance = null;
-
+        /*
+         * This function is the constructor.
+         **/
         private IOFromSimulator()
         {
-                this.ioFromFile = IOFromFile.Instance;
+            this.ioFromFile = IOFromFile.Instance;
         }
 
+        /*
+         * This function return the some instance of IOFromSimulator 
+         * when we do get
+         **/
         public static IOFromSimulator Instance
         {
             get
@@ -97,39 +103,31 @@ namespace WebApplication1.Models
             }
         }
 
-
-        public object MessageBox { get; private set; }
-
         /*
-         * This function is called when the "Connect" button is clicked.
-         * The function creates new thread for the server and start it.
-         * Moreover, the function accepts a client (the Flight Simulator)
-         * to it's server and connect as a client to the Flight Simulator.
-         */
-        public void Connect()
-        {
-            //    this.ConnectionThread = new Thread(new ThreadStart(ConnectInOtherThread(String ip, int port));
-            //    this.ConnectionThread.Start();
-            //    this.isWriteToFile = false;
-        }
-
+         * This functiom connet to the simulator
+         **/
         public void ConnectInOtherThread(String ip, int port)
-        {;
+        {
             if(ip == null && port == 0)
             {
+                //take the previous ip and port
                 this.client = new TcpClient(this.ip, this.port);
                 this.stream = this.client.GetStream();
             }
             else
             {
+                //set the ip and port that we get
                 this.ip = ip;
                 this.port = port;
                 this.client = new TcpClient(ip, port);
                 this.stream = this.client.GetStream();
-            }
-            System.Diagnostics.Debug.WriteLine("Simulator Just Accepted Me");
+            } 
         }
 
+        /*
+         * This function call ReadDataFromSimulator
+         * to read new point from the simulator.
+         **/
         public void getPoint()
         {
             this.ReadDataFromSimulator();
@@ -144,7 +142,6 @@ namespace WebApplication1.Models
          */
         public void ReadDataFromSimulator()
         {
-            System.Diagnostics.Debug.WriteLine("Inside ReadData...");
             byte[] Buffer = new byte[1024];
             int recv;
             double value;
@@ -152,23 +149,24 @@ namespace WebApplication1.Models
             List<String> RequestsStringsList = new List<String>();
             RequestsStringsList.Add("get /position/longitude-deg\r\n");
             RequestsStringsList.Add("get /position/latitude-deg\r\n");
-
+            //if we will write to the file
+            // read from the simulator also the value of the rudder and throttle
             if (this.isWriteToFile)
             {
                 RequestsStringsList.Add("get /controls/flight/rudder\r\n");
                 RequestsStringsList.Add("get /controls/engines/engine/throttle\r\n");
             }
+            // move on the list and read from the simulator the values
             for (int i = 0; i < RequestsStringsList.Count; i++)
             {
                 num = "";
-                System.Diagnostics.Debug.WriteLine("Sent: " + RequestsStringsList[i]);
                 Buffer = Encoding.ASCII.GetBytes(RequestsStringsList[i]);
                 this.stream.Write(Buffer, 0, Buffer.Length);
                 Buffer = new byte[1024];
                 recv = this.stream.Read(Buffer, 0, Buffer.Length);
                 String c = Encoding.ASCII.GetString(Buffer, 0, recv);
                 int u = RequestsStringsList[i].Length - 2;
-                System.Diagnostics.Debug.WriteLine("Sent: " + c);
+                //take only the number that we get
                 for (int j = u; j < c.Length; j++)
                 {
                     if (Char.IsDigit(c[j]) || c[j] == '.' || c[j] == '-')
@@ -177,8 +175,7 @@ namespace WebApplication1.Models
                     }
                 }
                 value = Convert.ToDouble(num);
-
-                System.Diagnostics.Debug.WriteLine("Recieved: " + value);
+                //set the value to the right proprtie
                 switch (i)
                 {
                     case 0:
@@ -195,13 +192,19 @@ namespace WebApplication1.Models
                         break;
                 }
             }
+            //if the when to write to the file
             if (this.isWriteToFile)
             {
+                //add all the value to array
                 double[] dataArray = { this.Lon, this.Lat, this.Throttle, this.Rudder };
+                //save the values
                 this.ioFromFile.saveData(this.FileName, dataArray);
             }
         }
 
+        /*
+         * This function set new ip and port
+         **/
         public void setIpAndPort(String ip, int port)
         {
             this.ip = ip;
