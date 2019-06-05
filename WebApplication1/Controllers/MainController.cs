@@ -46,6 +46,8 @@ namespace WebApplication1.Controllers
 
         public void CheckURL(String ip, int port)
         {
+            Session["ip"] = ip;
+            Session["port"] = port;
             try
             {
                 IPAddress address = IPAddress.Parse(ip);
@@ -59,7 +61,8 @@ namespace WebApplication1.Controllers
 
         public ActionResult DisplayLocation(String ip, int port)
         {
-
+            Session["ip"] = ip;
+            Session["port"] = port;
             this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
             this.myModel.ioFromSimulator.getPoint();
             return View();
@@ -67,6 +70,8 @@ namespace WebApplication1.Controllers
 
         public ActionResult DisplayAnimation(String ip, int port, int freq)
         {
+            Session["ip"] = ip;
+            Session["port"] = port;
             Session["freq"] = freq;
             this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
             this.myModel.ioFromSimulator.ReadDataFromSimulator();
@@ -75,6 +80,8 @@ namespace WebApplication1.Controllers
 
         public ActionResult Save(String ip, int port, int freq, int sec, String fileName)
         {
+            Session["ip"] = ip;
+            Session["port"] = port;
             Session["sec"] = sec;
             Session["freq"] = freq;
             this.myModel.ioFromSimulator.FileName = fileName;
@@ -141,6 +148,19 @@ namespace WebApplication1.Controllers
             {
                 return "Done";
             }
+        }
+
+        [HttpPost]
+        public void CloseFileRead()
+        {
+            this.myModel.CloseConnection();
+        }
+
+        [HttpPost]
+        public void ReloadPage(String ip, int port)
+        {
+            this.myModel.CloseConnection();
+            this.myModel.ioFromSimulator.ConnectInOtherThread(ip, port);
         }
     }
 }

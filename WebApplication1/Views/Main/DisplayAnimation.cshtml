@@ -8,6 +8,7 @@
             html, body {
                 margin: 0;
                 height: 100%;
+                width: 100%;
                 background-image: url(../../../Content/export-map-share.png);
                 background-position: center;
                 background-repeat: no-repeat;
@@ -17,6 +18,7 @@
             canvas {
                 margin: 0;
                 height: 100%;
+                width: 100%;
                 object-fit: cover;
                 display: block;
                 background-position: center;
@@ -33,6 +35,8 @@
 
             div {
                 position: relative;
+                height: 100%;
+                width: 100%;
             }
 
             .bluePoint {
@@ -60,7 +64,9 @@
         var y1 = 0;
         var x2 = 0;
         var y2 = 0;
-        var IntervalTime = @Session["freq"] * 1000
+        var IntervalTime = @Session["freq"] * 1000;
+        var ip = @Session["ip"];
+        var port = @Session["port"];
         Animation = (function () {
             $.post("@Url.Action("GetPoint")").done(function (xml) {
                 var xmlDoc = $.parseXML(xml),
@@ -95,5 +101,19 @@
         });
         setInterval(Animation, IntervalTime);
         Animation();
+        $(window).on('beforeunload', function() {
+            $.post("@Url.Action("ReloadPage")", ip, port);
+            return;
+});
+        @*window.onbeforeunload = function (e) {
+            //was load from network
+            if (isNetworkDisplay == "1") {
+                disconnect();
+            }
+            //was load from file
+            else {
+                $.post("@Url.Action("CloseFileRead")");
+            }
+        }*@
     </script>
 
