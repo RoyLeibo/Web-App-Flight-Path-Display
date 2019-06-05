@@ -54,9 +54,10 @@
     var ctx = c.getContext("2d");
     c.width = window.innerWidth;
     c.height = window.innerHeight;
+    // normalized lon and lat
     var lon = (@ViewBag.lon + 180) * c.width / 360;
     var lat = (@ViewBag.lat + 90) * c.height / 180;
-
+    // draw a circle
     ctx.beginPath();
     ctx.arc(lon, lat, 5, 0, 2 * Math.PI);
     ctx.fill();

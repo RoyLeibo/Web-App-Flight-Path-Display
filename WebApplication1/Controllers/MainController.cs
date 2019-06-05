@@ -50,19 +50,6 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-        //public void CheckURL(String ip, int port)
-        //{
-        //    try
-        //    {
-        //        IPAddress address = IPAddress.Parse(ip);
-        //        this.DisplayLocation(ip, port);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        this.DisplayPath(ip, port);
-        //    }
-        //}
-
         /*
          * This function return the action of the DisplayLocation.
          * connect to the simulator, get one point and show the point on the map

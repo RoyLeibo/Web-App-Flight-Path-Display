@@ -73,15 +73,18 @@
         }
         ++i;
             $.post("@Url.Action("GetPoint")").done(function (xml) {
+                // parsing the xml recieved
                 var xmlDoc = $.parseXML(xml),
                 $xml = $(xmlDoc),
                 lon = $xml.find("Lon").text();
                 lon = parseFloat(lon);
                 lat = $xml.find("Lat").text();
                 lat = parseFloat(lat);
+                // normalized lon and lat
                 x2 = (lon + 180) * (canvas.width / 360);
                 y2 = (lat + 90) * (canvas.height / 180);
                 if (x1 != 0) {
+                    // draw a line
                     ctx.beginPath();
                     ctx.moveTo(x1, y1);
                     ctx.lineTo(x2, y2);
@@ -90,12 +93,15 @@
                     y1 = y2;
                 }
                 else {
+                    // draw a circle at the plane start position
                     x1 = x2;
                     y1 = y2;
                     ctx.beginPath();
                     ctx.arc(x1, y1, 5, 0, 2 * Math.PI);
                     ctx.fill();
                 }
+                // if the time for the animation is done, call a function from the controller
+                // to save all the data
                 if (bool) {
                     $.post("@Url.Action("SaveData")").done(function (xml) {
                     });
