@@ -190,12 +190,20 @@ namespace WebApplication1.Controllers
             }
         }   
 
+        /*
+         * This function is called from the script and close the connection to the server 
+         **/
+
         [HttpPost]
         public void CloseFileRead()
         {
             this.myModel.CloseConnection();
         }
 
+        /*
+         * This function is called from the script and close the connection to the server 
+         * and reconnects.
+         **/
         [HttpPost]
         public void ReloadPage()
         {

@@ -44,7 +44,7 @@
         }
     </style>
 
-    <canvas id="myCanvas" style="border:1px solid black;"></canvas>
+    <canvas id="myCanvas"></canvas>
 </div>
 
 <script src="jquery-1.10.2.min.js"></script>
@@ -75,10 +75,8 @@
                 lat = parseFloat(lat);
                 var canvas = document.getElementById("myCanvas");
                 var ctx = canvas.getContext("2d");
-                var renlon = Math.floor(Math.random() * 300) - 150;
-                var renlat = Math.floor(Math.random() * 300) - 150;
-                x2 = (lon + 180) * (canvas.width / 360) + renlon;
-                y2 = (lat + 90) * (canvas.height / 180) + renlat;
+                x2 = (lon + 180) * (canvas.width / 360);
+                y2 = (lat + 90) * (canvas.height / 180);
                 if (x1 != 0) {
                     ctx.beginPath();
                     ctx.moveTo(x1, y1);
