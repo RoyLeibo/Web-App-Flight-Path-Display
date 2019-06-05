@@ -27,13 +27,22 @@ namespace WebApplication1.Models
                 IoEvent?.Invoke();
             }
         }
+
+        // IOFromFile is singlton
         private static IOFromFile instance = null;
 
+        /*
+         * This function is the constructor.
+         **/
         private IOFromFile()
         {
             this.LinesToSave = new List<String>();
         }
 
+        /*
+         * This function return the some instance of IoFromFile 
+         * when we do get
+         **/
         public static IOFromFile Instance
         {
             get
